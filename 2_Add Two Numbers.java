@@ -34,3 +34,29 @@ class Solution {
         return vHead.next;
     }
 }
+
+/**
+ * Follow-up:
+ * 如果一个链表是逆序的，另一个链表是正序的，但你不能使用列表来存储中间结果，如何解决这个问题？
+ * 
+ * Solution: 
+ * 1. 反转正序链表：首先将正序链表反转，使其变为逆序链表。
+ * See 206. Reverse Linked List
+ * 2. 使用原始问题的解法：现在两个链表都是逆序的，我们可以直接使用原始问题的解法来相加两个链表。
+ * 3. 反转结果链表：最后，将结果链表反转，使其变为正序链表。
+ */
+
+public class Solution {
+    public ListNode reverseList(ListNode head) {
+        ListNode prev = null;
+        ListNode curr = head;
+
+        while (curr != null) {
+            ListNode temp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = temp;
+        }
+        return prev;
+    }
+}
