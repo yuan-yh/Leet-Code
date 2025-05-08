@@ -168,7 +168,7 @@ App Exits -> Close the Pool
 
 #### Testing
 ##### Frontend Test
-###### Vue / Pinia Test
+**Vue / Pinia Test**
 Source: https://cn.vuejs.org/guide/scaling-up/testing
 
 **Unit Test** on 组合式函数 (Composables, like useMouse) & 组件
@@ -335,16 +335,37 @@ Statement: Revamped invoice dashboards using Vue.js, achieving a **20%** reducti
 #### 3 - (后端)REST API/优化数据交换/数据一致性
 Statement: Developed and maintained **RESTful APIs**, optimizing data exchange between financial services, resulting in a **25% reduction** in transaction processing time and improving data consistency by **30%**
 
+**API设计与测试**：用Swagger记录所有端点，Vitest单元测试，Jest/knex.js集成测试 - 使用测试数据库验证从API调用到查询执行再返回的整个流程（例如，发票編輯→更新）。
+
+**性能25%**：使用JMeter模拟高并发交易，对比优化前后的平均响应时间（如从800ms降至600ms）。
+
+**数据一致性30%**：事务包装器 - 在ACID兼容的数据库事务中包装相关操作，以确保原子性。
+- 将多个关联的数据库操作（如扣款、更新账单状态）包装在原子性事务中，避免部分失败导致数据错乱。
+- 验证：每日比对交易流水和账单状态，统计不一致的比例（如从5%降至3.5%，即提升30%）。
+
 #### 4 - (DB)数据库重构/减少数据冗余/查询响应时间
 Statement: Optimized **SQL** queries and restructured the database schema for the invoice management system, reducing data redundancy by **35%**, cutting query response time by **40%** and boosting invoice retrieval efficiency across **50,000+** products
 
-DB: PostgreSQL
+**DB: MySQL -> PostgreSQL**
 - MySQL适合快速开发和高并发应用；PostgreSQL更适合需要稳定性和高级特性的企业应用程序。
 - 擅长复杂查询, 优先考虑安全性和标准
-##### Data redundancy数据冗余
 
-##### Query response time查询响应时间
-pagination分页
+**Data redundancy数据冗余 35%**
+**实现方法：**
+- **数据库规范化**：将重复存储的字段（如billing pattern）拆分到独立表中，通过外键关联。
+- **统一数据源**：为通用数据（如bottle type价格）建立中央引用表，替代多处冗余存储。
+**测量方式：**
+- **存储空间对比**：通过数据库分析工具（如MySQL的`INFORMATION_SCHEMA`）统计优化前后总数据量（如从500GB降至325GB）。
+- **冗余字段审计**：手动或通过脚本扫描表结构，统计重复字段的消除比例。
+
+**Query response time查询时间 40%** -> **分页优化**
+**实现方法：**
+- **高效分页策略**：将传统的`LIMIT-OFFSET`分页改为基于游标的分页（如使用`WHERE id > last_id`），避免全表扫描。
+- **索引优化**：为分页排序字段（如时间戳、ID）添加组合索引，加速数据定位。
+**测量方式：**
+- **执行计划分析**：使用数据库工具（如`EXPLAIN`）确认分页查询是否命中索引，避免全表扫描。
+- **生产监控**：观察真实用户的分页操作延迟（如通过New Relic的APM指标）。
+-  **(future after switch to PostgreSQL) 压测对比**：通过pgBench等工具模拟分页请求，统计优化前后平均响应时间（如从200ms降至120ms）。
 
 #### 5 - (部署)Docker/CI-CD管道/缩短部署时间/100%自动化测试覆盖
 Statement: Created and deployed **CI/CD** pipelines using Docker, slashing deployment time by **50%** and ensuring 100% continuous integration and automated testing coverage 
@@ -382,19 +403,93 @@ Developed **REST API** for Jackson Laboratory using **Python** & **Flask** in **
 Integrated analytical tools in microservices and mitigated downtime during tool update by 18%
 在微服务中集成分析工具，并将工具更新期间的停机时间减少18%
 
+**将网页功能拆分为两个独立的微服务**：
+- **用户浏览服务**：处理核心功能（页面渲染、用户交互、静态资源加载）
+- **分析服务**：处理数据分析（用户行为追踪、点击热图、性能监控）
+**通信机制**
+- **异步消息队列**：通过 Kafka/RabbitMQ 传递分析事件（如用户点击、页面停留时间）
+- **独立数据库**：分析服务使用专用数据库（如 PostgreSQL），与用户浏览服务的业务数据库（如 SQ-Lite -> MySQL）隔离
+**服务隔离的优势**
+- 微服务架构停机时间: 分析工具更新 5分钟（仅分析服务）, 用户浏览功能更新 0分钟（独立部署）
+
+**工具更新时的零停机策略18%**
+蓝绿部署（Blue-Green Deployment）
+- **并行环境**：同时运行新旧两套分析服务（v1 和 v2）
+- **流量切换**：通过负载均衡器逐步将流量从旧版本迁移到新版本
+数据兼容性保障
+- **API 版本控制**：
+```
+GET /api/v1/analytics   → 旧版分析工具
+GET /api/v2/analytics   → 新版分析工具
+```
+
 #### 3 - PostgreSQL/SQ-Lite
 Developed backend business logics including user authentication/sign-on and gene set upload; Performed data insertion and retrieval with **PostgreSQL** and **SQ-Lite**
 开发后端业务逻辑，包括用户认证/登录和基因集上传；使用PostgreSQL和SQ-Lite进行数据的插入和检索
-##### Why tech stack (PostgreSQL and SQ-Lite)
+
+**Why PostgreSQL and SQ-Lite**
+- **PostgreSQL**用于：
+    - 需要复杂查询的基因数据(如JSONB支持)
+    - 高并发用户认证(利用行级锁)
+- **SQLite**用于：
+    - 本地开发环境快速迭代
+    - 只读分析工具的数据持久化
 
 #### 4 - Async Python/页面缓存/HTTPS/web验证
 Optimize runtime performance on concurrent tasks using **Async** Python and recurrent analytical queries using **Page Caching**; Implemented secure data access point using HTTPS protocols & web authentication
 使用Async Python优化并发任务的运行时性能，并使用页面缓存优化循环分析查询；使用HTTPS协议和web身份验证实现安全数据接入点
 
+**Async异步处理**：
+1. 使用asyncio处理基因数据分析任务
+	1. 用户提交分析请求 → 任务加入队列 → 立即返回“处理中”状态  
+	2. 后台异步执行分析 → 用户可继续浏览其他页面  
+	3. 分析完成后通过WebSocket/Polling通知用户  
+2. **事件循环机制**：使用`asyncio`库创建事件循环，通过协程（Coroutine）并发处理多个任务
+3. **并发模型优势**：
+	1. 单线程处理数千并发任务
+	2. I/O等待时间（如数据库查询）可被其他任务利用
+4. **用户体验优化**
+	1. **进度反馈**：实时显示分析进度条
+	2. **中断恢复**：允许用户暂停/取消分析
+	3. **后台运行**：即使用户关闭页面，分析仍持续进行
+- (future) CPU密集型任务改用Celery+Redis
+
+**页面缓存**：
+1. **双重缓存机制** 
+	1. **浏览器缓存** (SessionStorage)：存储用户设备本地的历史分析结果
+	2. **服务器缓存** (LRU, 存储在服务器内存RAM中)：在服务端保存高频查询结果
+	3. **协同工作**：浏览器优先使用本地缓存，失效时向服务器请求更新
+2. **识别重复查询**
+	1. 用户提交分析参数 → 生成唯一缓存键（如MD5哈希） → 匹配历史记录
+3. **本地存储策略**
+	1. **SessionStorage**：临时保存当前会话的分析记录
+4. **服务器端内存缓存优化**
+	1. **LRU算法**：保留最近使用的1000条分析结
+	2. **分层存储**：
+		1. 热数据：驻留内存（TTL=10分钟）
+		2. 温数据：持久化存储（TTL=24小时）
+5. **缓存更新流程**
+	1. 用户发起新分析 → 检查本地缓存 → 命中则直接渲染 → 未命中则请求服务器 → 服务器返回数据 → 存储到本地 → 显示结果
+6. 缓存更新策略 - **主动失效**
+	1. 用户logout → 清除相关分析缓存
+	2. 定时夜间刷新热点缓存
+7. (Future: )Redis缓存热门基因查询结果
+
+**HTTPS** = HTTP + TLS加密层
+- 全站HTTPS -> 从Let's Encrypt获取免费证书 -> 配置证书自动续期（每90天） -> 在Web服务器（如Nginx）中启用TLS 1.2/1.3
+
+**Web身份验证**
+1. **登录阶段**：
+    - 用户提交凭证（用户名/密码）
+    - 服务端验证后生成签名令牌（JWT, 有效期2小时）
+    - 令牌包含用户ID、权限和有效期
+2. **访问阶段**：
+    - 客户端在Authorization头携带令牌
+    - 服务端验证令牌签名和有效期
+    - 拒绝无效/过期令牌
+3. 定期执行OWASP ZAP安全扫描
 ## Project - eCommerce Platform
 ### Tech Stack
-#### Architecture Overview
-
 #### Testing & Deployment
 ##### E2E Test & CI/CD
 - Tool: Postman
@@ -558,6 +653,29 @@ Postman用于端到端测试，Stripe API用于支付；使用Heroku进行部署
 #### 1 - (总结)
 Developed and launched a web application for displaying popular trends from various sources using Java under the Spring Boot framework in Agile development cycles
 在敏捷开发周期的Spring Boot框架下，使用Java开发并启动了一个web应用程序，显示从多个数据源（[[#流式Stream API]]: 社交媒体、视频平台等）实时抓取的流行趋势
+
+1. **系統设计**：
+	1. 采用 **发布-订阅模式**，通过Kafka作为消息总线集成多数据源（社交媒体、视频平台）。
+	2. 每个数据源对应独立的Kafka Producer，后端Spring Boot服务作为消费者订阅Topic，实时解析数据并计算热度（如观看量×0.7 + 点赞量×0.3）。
+	3. 使用 **观察者模式** 动态更新前端：当Redis中热度排名变化时，通过WebSocket主动推送至客户端。
+2. **数据一致性保障**：
+	1. **统一时间戳**：所有数据源上报时间强制转换为UTC时区，避免时区差异。
+	2. **数据去重**：为每条趋势生成唯一ID（如`平台ID+内容哈希`），通过Redis的`SETNX`命令去重。
+	3. **最终一致性**：允许短暂延迟（如1秒），通过定时任务补偿缺失数据。
+3. **限流与节流**：
+	1. 对第三方API调用使用 **令牌桶算法**（通过Guava RateLimiter），限制每秒请求数（如100 QPS）。
+	2. 对突发流量启用 **降级策略**：当数据源不可用时，返回缓存的历史趋势并标记为“待更新”。
+
+**Test Plan**
+1. **准确性与实时性测试**：
+	1. **影子流量**：将生产环境流量复制到测试环境，对比新旧系统输出结果的一致性。
+	2. **时间敏感测试**：注入带未来时间戳的数据，验证系统是否按预期丢弃或暂存。
+2. **自动化测试**：
+	1. **API测试**：Postman的Collection Runner可以用于批量测试
+3. **延迟优化**：
+	1. 使用 **分布式追踪**（SkyWalking）定位慢链路，如发现Kafka Consumer反序列化耗时高，改用Protobuf替代JSON。
+	2. 前端启用 **分块加载**：优先渲染首屏趋势，异步加载后续数据。
+
 #### 2 - Kafka
 Implemented event streaming service using Kafka to transmit top trending videos based on views and kudos
 通过Kafka建立高吞吐事件流管道，持续传输视频的观看量、点赞量等核心指标
@@ -566,6 +684,61 @@ Implemented event streaming service using Kafka to transmit top trending videos 
 - 实时计算视频热度排名（基于观看量+好评度加权算法）
 - 使用Redis缓存当前热门趋势结果，减少重复计算和数据库查询
 Kafka八股: [[#Kafka]]
+
+**Streaming & Data Processing**: **数据流入Kafka → 实时计算 → 背压处理**
+1. **Kafka高吞吐配置**：
+	1. **目标**：高效接收海量视频事件（播放、点赞、分享）。
+	2. **分区策略**：按视频ID哈希分区，确保同一视频的事件顺序性。
+	3. **按视频ID哈希分区**：
+		1. 每个视频的事件（如播放、点赞）根据其ID的哈希值，分配到固定分区。
+		2. **作用**：确保同一视频的所有事件在同一分区内**顺序处理**（如先播放后点赞，顺序不乱）。
+	4. **生产者批量提交优化**：
+		1. **linger.ms=100**：生产者等待最多100ms，将多个事件打包成一个批次发送，减少网络请求次数。
+		2. **batch.size=64KB**：当批次大小达到64KB时立即发送，避免内存占用过高。
+		3. **效果**：相比单条发送，吞吐量提升30%（如从5万/秒 → 6.5万/秒）。
+	5. **分区数设定**：
+		1. 根据吞吐量预估设置分区数（如10个分区，每秒处理10万事件）。
+		2. 分区数过多会导致Consumer资源浪费，过少则成为瓶颈。
+2. **Kafka Consumer消费数据**：
+	1. 每个Consumer实例订阅一个或多个分区，按顺序拉取事件。
+	2. 消费者组：横向扩展多个Consumer，分摊负载（如3个Consumer处理10个分区）。
+3. **排名算法设计**：
+	1. 热度公式：`热度 = 播放量(評論) × 0.6 + 点赞量 × 0.3 + 分享量 × 0.1`，权重基于业务调研（用户调研显示播放量最重要）。
+	2. **公平性验证**：
+		1. A/B测试：对照组使用旧算法，实验组用新算法，统计用户停留时长（新算法组提升15%）。
+		2. 长尾保护：对小众视频（播放量<1000）单独加权，避免头部视频垄断榜单，提升内容多样性。
+4. **结果缓存与更新**：
+	1. **Redis存储结构**：
+		1. 使用Sorted Set（有序集合）存储视频ID和热度值，自动按热度排序。
+		2. Key示例：`trending:videos:20231101`，Value：`{video_123: 9500, video_456: 8700}`。
+	2. **更新策略**：
+		1. 每10秒将Kafka消费的最新数据批量更新到Redis，减少频繁写操作。
+5. (future) **背压处理**：
+	1. Consumer端监控处理延迟，超过阈值时动态扩容Kafka Consumer实例。
+	2. 启用 **死信队列**（Dead Letter Queue）暂存无法及时处理的消息，避免雪崩。
+	3. **背压检测**：
+		1. **监控指标**：
+			1. **Consumer Lag**：Kafka消息积压量（未处理消息数），通过Prometheus监控。
+			2. **处理延迟**：从事件产生到写入Redis的耗时（如>500ms触发告警）。
+		2. **动态扩容**：
+			1. 当Lag持续增长超过阈值（如1000条），自动扩容Kafka Consumer实例（如从3个→5个）。
+	4. **死信队列（DLQ）处理**：
+		1. **场景**：遇到无法处理的异常事件（如数据格式错误、依赖服务超时）。
+		2. **流程**：
+			1. 将异常消息转发至独立的DLQ Topic（如`dead_letter_video_events`）。
+			2. 后续由人工或离线任务分析DLQ数据，修复后重新注入主流程。
+		3. **作用**：避免异常消息阻塞主流处理，保障系统持续运行。
+	5. **降级策略**：
+		1. **缓存兜底**：当Redis更新失败时，返回上一次成功缓存的热榜数据。
+		2. **限流**：当Kafka吞吐量达到上限，丢弃低优先级事件（如历史视频的播放事件）。
+
+**Test Plan**
+1. **端到端测试**：
+	1. 使用 **Kafka Testcontainers** 模拟完整管道：生产者→Kafka→消费者→Redis。
+	2. 注入乱序消息（如时间戳倒序），验证排序逻辑健壮性。
+2. **数据完整性监控**：
+	1. 通过Kafka的`__consumer_offsets` Topic监控Lag，设置报警阈值（如Lag>1000）。
+	2. (future) 使用Prometheus统计Redis缓存命中率，低于95%时触发缓存预热。
 
 #### 3 - Redis/分布式锁
 Incorporated Redis cache into backend service for distributed lock and query reduction
@@ -582,6 +755,37 @@ Nginx: Serves static trend pages generated from Kafka-fed data
     - 分布式锁控制热门榜单更新并发
     - 高频访问的实时趋势数据
 
+**分布式锁选型**：
+    - 选择Redis而非ZooKeeper，因更低的延迟（亚毫秒级）和更高的吞吐量（10万+ QPS）。
+    - 使用Redisson的`RLock`实现可重入锁，避免死锁。
+
+**分布式锁**
+**场景示例**：防止同一视频被多个线程重复计算热度。
+1. **加锁流程**：
+    - **唯一标识**：使用视频ID作为锁的Key（如`lock:video:123`）。
+    - **非阻塞获取**：通过`SETNX`命令（SET if Not eXists）尝试加锁。
+    - **超时机制**：设置锁的TTL（如10秒），避免死锁，即使客户端崩溃也能自动释放。
+2. **解锁流程**：
+	1. **Lua脚本原子操作**：确保只有锁持有者能释放锁。
+3. **锁竞争优化**：
+	1. **分段锁**：将热门资源拆分为多个子锁（如`lock:video:123:part1`），减少争用。
+	2. **重试策略**：获取锁失败时，随机退避（如50ms~200ms）后重试，避免雪崩。
+
+**查询减少的缓存策略**
+**场景示例**：缓存视频热度排行榜，减少MySQL查询。
+5. **缓存逻辑**：
+    - **读路径**：
+        - 先查Redis，命中则直接返回。
+        - 未命中则查MySQL，回填Redis并设置TTL（如60秒）。
+    - **写路径**：
+        - 更新MySQL后，同步删除或更新Redis缓存（双写一致性）。
+6. **缓存数据结构**：
+    - **Sorted Set**：存储实时排行榜（Key: `trending:videos`, Value: `{video_123: 9500, video_456: 8700}`）。
+    - **Hash**：缓存用户会话信息（Key: `user:session:456`, Value: `{name: "Alice", last_login: "2023-11-01"}`）。
+7. **效果验证**：
+    - **监控指标**：缓存命中率（>95%）、数据库QPS下降（如从5000 → 800）。
+    - **工具**：通过Redis的`INFO`命令或Prometheus监控。
+
 #### 4 - Apache/Niginx/MySQL
 Designed a backend notification system and stored data into MySQl database;  Constructed a static HTML converter using Apache and Nginx with minimized loading time
 设计后端通知系统，并将数据存储到MySQl数据库中；构建一个静态HTML转换器使用Apache和Nginx与最小的加载时间
@@ -590,13 +794,45 @@ Designed a backend notification system and stored data into MySQl database;  Con
     - 用户订阅关系
     - 历史趋势数据
     - 通知系统日志
-
 - Nginx + Apache：
     - 将动态生成的趋势页面转换为静态HTML
     - 通过负载均衡和缓存策略实现毫秒级加载
 - 通知系统：
     - 基于MySQL存储的订阅关系触发推送
     - 与第三方服务（短信/邮件）集成
+
+**后端通知系统设计（MySQL）**
+**场景示例**：向用户推送系统通知（如视频审核结果）。
+1. **MySQL表设计**：
+    - **读写分离**：写操作主库（InnoDB事务支持），读操作从库（MyISAM查询优化）。
+    - **表结构核心字段**：
+```
+CREATE TABLE notifications (  
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,  
+  user_id INT NOT NULL,         -- 接收用户  
+  content TEXT NOT NULL,        -- 通知内容  
+  status ENUM('pending', 'sent', 'failed') DEFAULT 'pending',  
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  
+  INDEX idx_user_status (user_id, status)  -- 加速查询未发送通知  
+);  
+```
+2. **可靠性保障**：
+    - **重试机制**：对失败通知（如第三方推送服务超时）最多重试3次，间隔指数退避（1s → 5s → 25s）。
+    - **死信队列**：最终失败的通知归档到S3，供人工排查（如错误日志、错误码）。
+3. **性能优化**：
+    - **批量处理**：每次从MySQL拉取100条`pending`通知，批量发送。
+    - (future) **异步处理**：通过消息队列（如RabbitMQ）解耦通知生成与发送。
+
+**静态HTML转换器（Apache/Nginx优化）**
+**场景示例**：将动态生成的视频详情页预渲染为静态HTML，加速访问。
+1. **静态化流程**：
+    - **触发时机**：当视频发布或更新时，后台服务调用渲染引擎生成HTML文件。
+    - **存储路径**：按视频ID分目录存储（如`/html/videos/123/index.html`）。
+2. **Web服务器优化**：
+	- **Apache辅助**：用于处理少量动态请求（如用户登录），通过`mod_rewrite`将静态请求路由到Nginx。
+3. **性能提升效果**：
+    - **加载时间对比**：动态页平均800ms → 静态页200ms（减少75%）。
+    - **工具验证**：通过Lighthouse测试，性能评分从60提升至90+。
 
 ## Java / SpringBoot
 ### 常见设计模式
@@ -653,10 +889,26 @@ public class CarFactory {
 | `@Value`                 | 注入配置值     |
 | `@RequestMapping`        | 映射URL路径   |
 ####  @Autowired 和 @Resource 注解
-TODO
+TBC (still not fully clear)
+都是用来实现依赖注入的注解，区别如下：
+- **来源**:`@Autowired` 是Spring框架提供的注解。`@Resource` 是Java本身提供。
+- **依赖性**：使用`@Autowired` 时，通常需要依赖Spring的框架。使用`@Resource` 时，即使不在Spring框架下，也可以在任何符合Java EE规范的环境中工作。
+- **使用场景**：当你需要更细粒度的控制注入过程，或者你需要支持Spring框架之外的Java EE环境时，`@Resource` 注解可能是一个更好的选择；如果你完全在Spring的环境下工作，并且希望通过类型自动装配，`@Autowired` 是更常见的选择。
+- **属性**:`@Autowired` 可以不指定任何属性，仅通过类型自动装配。`@Resource` 可以指定一个名为`name`的属性，该属性表示要注入的bean的名称。
+- **注入方式**：`@Autowired` 默认是通过类型（byType）进行注入。如果容器中存在多个相同类型的实例，它还可以与`@Qualifier`注解一起使用，通过指定bean的id来注入特定的实例。`@Resource` 默认是通过名称（byName）进行注入。如果未指定名称，则会尝试通过类型进行匹配。
+
+✔ **用@Autowired当**：
+- 项目纯Spring环境
+- 喜欢简洁的按类型自动装配
+- 需要和其他Spring特性（如@Primary）配合使用
+
+✔ **用@Resource当**：
+- 需要兼容非Spring环境
+- 想要更精确地按名称注入
+- 项目已经有Java EE的依赖
 
 ### Java反射（Reflection）
-TODO
+TBC (still not fully clear)
 反射可以让程序在运行时查看和操作类、方法、字段等内部信息。
 
 ### Java线程安全
@@ -753,8 +1005,16 @@ public class OrderService {
 ```
 ### HashMap VS ConcurrentHashMap
 Source: https://xiaolincoding.com/backend_interview/internet_giants/elme.html#%E8%AE%B2%E4%B8%8Bhashmap
-TODO
+**HashMap**
+HashMap 数据结构是数组和链表，HashMap通过哈希算法将元素的键（Key）映射到数组中的槽位（Bucket）。如果多个键映射到同一个槽位，它们会以链表的形式存储在同一个槽位上，所以冲突很严重，一个索引上的链表非常长，效率就很低了 - O(n)。
 
+**JDK1.8**: 当一个链表的长度超过8的时候就转换数据结构，使用**红黑树**，查找时使用红黑树，时间复杂度O（log n），可以提高查询性能，在数量较少时(<6)，会将红黑树转换回链表。
+
+- 线程不安全 - 同时往车里放商品，可能导致：数据丢失, 数据覆盖, 死循环
+
+**ConcurrentHashMap**
+使用数组加链表的形式实现
+- 虽然是线程安全的，但因为它的底层实现是数组 + 链表的形式，所以在数据比较多的情况下访问是很慢的，因为要遍历整个链表，而 JDK 1.8 则使用了数组 + 链表/红黑树的方式优化了 ConcurrentHashMap 的实现，从之前的 O(n) 优化到了 O(logn) 的时间复杂度。
 ## Database
 ### AVL VS B+ VS Red-Black Tree
 #### AVL Tree（平衡二叉搜索树）
@@ -1090,19 +1350,53 @@ Official Documentation: https://redis.io/docs/latest/develop/use/patterns/distri
 - TCP适用网页、邮件、文件传输，UDP适用视频会议、在线游戏、直播。
 
 ### TCP/IP 四层模型
-TODO
-
+TBC (to be clear further)
 Source: https://javaguide.cn/cs-basics/network/tcp-connection-and-disconnection.html
 ### TCP 三次握手
-为什么要三次握手
-第-2-次握手传回了-ack-为什么还要传回-syn
-三次握手过程中可以携带数据吗
+1. **第一次握手（SYN=1, seq=x）**
+    - 客户端发送"同步序列号"请求
+    - 就像举手说："我要开始连接了！"
+        
+2. **第二次握手（SYN=1, ACK=1, seq=y, ack=x+1）**
+    - 服务端确认收到请求，并发送自己的同步请求
+    - 相当于回应："收到你的请求了，我也准备好了！"
+        
+3. **第三次握手（ACK=1, seq=x+1, ack=y+1）**
+    - 客户端确认服务端的准备
+    - 最后确认："好的，我们开始通信吧！"
+        
+**为什么要三次握手**
+- **防止历史连接请求突然到达, 确认双方的收发能力正常**
+- **第一次握手**：Client 什么都不能确认；Server 确认了对方发送正常，自己接收正常
+- **第二次握手**：Client 确认了：自己发送、接收正常，对方发送、接收正常；Server 确认了：对方发送正常，自己接收正常
+- **第三次握手**：Client 确认了：自己发送、接收正常，对方发送、接收正常；Server 确认了：自己发送、接收正常，对方发送、接收正常
 
+**第2次握手传回了ack为什么还要传回syn**
+服务端传回发送端所发送的 ACK 是为了告诉客户端：“我接收到的信息确实就是你所发送的信号了”，这表明从客户端到服务端的通信是正常的。回传 SYN 则是为了建立并确认从服务端到客户端的通信。
+
+**三次握手过程中可以携带数据吗**
+第三次握手是可以携带数据的(客户端发送完 ACK 确认包之后就进入 ESTABLISHED 状态了)
 ### TCP 四次挥手
-为什么要四次挥手
-为什么不能把服务端发送的-ack-和-fin-合并起来-变成三次挥手
-如果第二次挥手时服务端的-ack-没有送达客户端-会怎样
-为什么第四次挥手客户端需要等待-2-msl-报文段最长寿命-时间后才进入-closed-状态
+1. **第一次挥手（FIN=1, seq=u）**
+    - 主动关闭方（如客户端）发送终止请求
+    - 表示："我的数据发完了"
+2. **第二次挥手（ACK=1, ack=u+1）**
+    - 被动关闭方（如服务端）确认收到终止请求
+    - 回应："知道你不想发了，但我可能还有数据要发给你"
+3. **第三次挥手（FIN=1, ACK=1, seq=v, ack=u+1）**
+    - 被动关闭方发完剩余数据后，发送自己的终止请求
+    - 表示："我也发完了，可以关了"
+4. **第四次挥手（ACK=1, ack=v+1）**
+    - 主动关闭方最后确认
+    - 最终确认："好的，正式断开"
+
+**为什么需要四次？**
+- TCP是全双工的：两个方向的数据传输相互独立
+- 必须分别关闭两个方向的数据流
+- 中间可能有数据需要继续传输（第二次和第三次挥手之间的等待）
+
+**为什么建立连接是三次，断开要四次？**  
+A：建立连接时服务端的"SYN+ACK"可以合并发送，但断开时服务端收到FIN后可能还有数据要发送，所以ACK和FIN需要分开发送。
 
 ### 访问网页的全过程
 - 从浏览器输入网址到网页显示，期间网络层面发生了什么？ 
@@ -1192,7 +1486,7 @@ RPC的优势
 - 通常长连接, 性能高（二进制编码）
 - 适用服务间内部通信（微服务通信）
 #### gRPC
-TODO (still not understand, relate to GO & distributed systems)
+TBC (still not understand, relate to GO & distributed systems)
 基于HTTP/2, RPC的实现
 gRPC的局限性
 - **浏览器支持有限**：需要grpc-web转换
@@ -1303,7 +1597,7 @@ JWT就是一个**自包含的、经过数字签名的JSON数据包**，由三部
 	1. 通过在请求的头部或参数中携带JWT令牌，可以实现无需Cookie的跨域身份验证。
 
 #### JWT VS Session
-TODO  (not understand yet)
+TBC  (not understand yet)
 JWT: 分布式/微服务, 多平台, 可接受短期风险, 高并发无状态验证
 Session: 单体应用, 仅浏览器, 需要严格会话控制, 需要集中式会话管理
 
@@ -1358,7 +1652,15 @@ JWT(JSON Web Token)使集群中的每台服务器都能独立验证用户身份�
 3. 不再需要Redis等共享会话存储，简化了架构
 
 ### WebSocket
-TODO
+TBC (to be clear)
+WebSocket是一种"长连接"技术：
+- 普通HTTP：每次都要发起请求, 挂断后必须重新发起请求才能再沟通
+	- 单向（只能客户端发起）
+	- 每次携带完整头部（较重）
+- WebSocket：首次建立连接（相当于"频道调谐"）, 之后双方随时可以说话, **不用反复建立连接**
+	- 双向（服务器可主动推送）
+	- 首次握手后头部很小（轻量）
+常见应用: 实时游戏, 聊天软件, 弹幕系统, 协同编辑, 股票实时行情
 
 ### 进程与线程
 进程（Process）- 独立的工厂
