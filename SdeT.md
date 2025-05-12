@@ -16,8 +16,10 @@
 - Argo CD：基於k8s的持續交付系統，只能在k8s上使用
 
 ## Self-Introduction
-Hi，我叫{NAME}，是cs专业的硕士生。我作为software developer有6个月的实习经验，主要做的是全栈开发这一块，也有实施过单元测试、集成测试、和e2e端到端测试。
-我对测试岗位很有兴趣，因为我认为测试是一个兼具了开发和用户视角的关键角色，可以更好地完善产品，而且我自己也很喜欢找bug。
+Hello，我叫{NAME}，是cs专业的硕士生。我作为software developer有6个月的实习经验，主要做的是全栈开发这一块，也有实施过单元测试、集成测试、和e2e端到端测试。
+
+我对测试岗位很有兴趣，因为我覺得测试是一个兼具了开发和用户视角的关键角色，可以更好地完善产品，而且我自己也很喜欢找bug。
+
 My name is Yuan, a master CS student. I have 6-month internship experience as a software developer and most work in the field of full-stack web development with hands-on experience in unit test, integration test, and E2E test.
 
 ## Internship Deep-Dive
