@@ -16,7 +16,8 @@
 - Argo CD：基於k8s的持續交付系統，只能在k8s上使用
 
 ## Self-Introduction
-TODO
+Hi，我叫{NAME}，是cs专业的硕士生。我作为software developer有6个月的实习经验，主要做的是全栈开发这一块，也有实施过单元测试、集成测试、和e2e端到端测试。
+我对测试岗位很有兴趣，因为我认为测试是一个兼具了开发和用户视角的关键角色，可以更好地完善产品，而且我自己也很喜欢找bug。
 My name is Yuan, a master CS student. I have 6-month internship experience as a software developer and most work in the field of full-stack web development with hands-on experience in unit test, integration test, and E2E test.
 
 ## Internship Deep-Dive
@@ -29,6 +30,8 @@ My name is Yuan, a master CS student. I have 6-month internship experience as a 
 6. Releasing: Nexus Repo集中管理软件包
 7. Deploying: Kubernetes承载应用的基础设施，所有应用程序都在k8s集群中运行
 8. Maintaining: Grafana & Prometheus监控基础设施，包括k8s、服务器、应用程序等
+
+一般是后端根据需求先构建数据模型，然后出接口文档-前端同时画页面，然后后端实现接口逻辑同时前端mock接口，填充页面，下来联调，转测，上线
 
 ### Tech Stack
 #### Architecture Overview
@@ -95,7 +98,6 @@ Background Information:
 ##### Vue
 - Render the UI (e.g., display user data) & trigger actions (e.g., a button click to fetch data).
 - 呈现UI（例如，显示用户数据的表）, 触发动作（例如，点击按钮获取数据）。
-
 ###### Lifecycle Hook
 Source: https://cn.vuejs.org/guide/essentials/lifecycle
 **创建阶段（Creation）- 初始化数据，调用api**
@@ -238,6 +240,21 @@ test('fetchInvoiceByID returns data in <100ms', async () => {
 ### Deep-Dive
 #### 1 - (总结)可扩展/日交易量增长
 Statement: Architected and implemented a scalable full-stack billing management app using **Vue**, **TypeScript** and **Electron**, collaborating with **cross-disciplinary** teams, which supported a **25%** increase in daily transaction volume
+##### STAR 总结
+在这段实习中，我主導开发了一个桌面端的账单管理系统，用于管理产品与其对应的发票信息。
+
+原先公司内部使用的是一个基于 C 开发的旧系统，随着业务扩展和数据体量的增长，這個应用在稳定性和功能可扩展性方面已经无法满足日常业务需求，比如查询效率低、发票信息冗余严重，影响了finance部門的处理效率。
+
+所以我们的目标是构建一个更高效、可扩展的新系统，提升发票管理、产品信息录入与查询的整体性能。我作为实习生，承担了前端页面开发、后端接口设计与实现，以及数据库优化、自动化测试，從頭到尾（笑）。
+
+- 我使用 **Vue** **和 TypeScript** 设计并实现了关键页面的组件结构，重构了发票展示与编辑模块，通过优化状态管理和组件渲染逻辑，使页面加载时间减少了 **20%**；
+- 在后端，我使用 **Node.js** **与 Express** 编写和维护了多组 **RESTful API**，用于发票与产品数据的交互，并通过改进数据结构，提升数据一致性达 **30%**；
+- 我还参与数据库重构，优化了 **SQL** **查询语句** 与索引策略，降低冗余数据 **35%**，提升了查询响应速度 **40%**，面对 **5** **万条以上**的产品数据依然能保持流畅；
+- 最后，我搭建了基于 **Docker** **的 CI/CD** **管道**，实现了 100% 的自动化单元测试与集成测试覆盖，使部署效率提高了 **50%**。
+
+项目成功交付后，系统每日处理账单量提升了 **25%**，用户满意度显著提升。这个项目让我学会了如何从全栈视角出发，系统性地提升产品性能与质量。我也更深刻理解了测试在实际开发流程中所起的关键作用。
+##### Metrics (25% daily transaction)
+进行为期一周的**A/B测试**，将50%的用户引导到原本的应用程序，50%引导到新的electron应用程序。通过跟踪交易完成量，我们发现新应用的完成率提高了30%。
 
 ##### Why tech stack (Vue + TypeScript + Electron)
 - Vue: 轻量级和快速渲染, 允许与现有系统逐步集成, 清晰的状态管理
@@ -278,29 +295,32 @@ Statement: Architected and implemented a scalable full-stack billing management 
 			- 高需求服务（例如，产品查找）可以独立于发票进行扩展。
 潜在的扩展性瓶颈
 - 数据库写争用 (Write Contention): 在高峰时间，并发的发票更新导致表锁(table lock), 可以通过切换到行级锁定(row-level locking)和批处理(batching writes)写来解决这个问题。
-
-##### Metrics (25% daily transaction)
-进行为期一周的**A/B测试**，将50%的用户引导到传统应用程序，50%引导到新的电子应用程序。通过跟踪交易完成量，我们发现新应用的完成率提高了30%。
-
-##### 测试策略
-Vitest @vue/test-utils on *Unit Test*, Docker/knex/Jest on *Integration Test*.
-
-##### Collaboration
+##### 合作Collaboration
 我们每周与产品、财务和QA团队进行一次同步，以使技术决策与业务目标保持一致。
 - 例如: 财务团队优先考虑优化发票编辑流程，因此我们改进了搜索流程(基于制造商、经销商、开票方、地区), 帮助他们更容易找到要编辑的发票。
 
 #### 2 - (前端)优化组件渲染和状态管理/减少页面加载时间
 Statement: Revamped invoice dashboards using Vue.js, achieving a **20%** reduction in page load time by optimizing component rendering and state management, which enhanced user engagement by **15%**
+##### 綜述
+我做了几个前端方面的优化：
+
+首先是 **组件懒加载**。原来的页面会一次性加载所有发票相关的组件，比如图表、历史记录、客户明细等等，导致首屏加载特别慢。我用 `defineAsyncComponent` 搭配 Vue Router 实现了按需加载，让这些“重组件”只有在用户点进去看的时候才加载，这样能大幅减少初始加载资源。
+
+第二是 **渲染优化**。发票页面里的表格数据很多。我用 `computed` 和 Vue 3.3 里的 `v-memo`（或类似的记忆化逻辑）来避免不必要的重新渲染。比如说如果只是更新了客户信息，整个表格就不会重绘，这样性能能稳定很多。
+
+然后是 **状态管理的调整**。原本我们的 Pinia store 是集中式的，很多状态绑在一起，一个变动就会触发很多组件更新。我把它们拆分成了模块化的 store，像发票、客户、统计信息都分开管理，让每个组件只订阅自己需要的数据，这样也减少了不必要的更新。
+
+至于性能改善的数据，**页面加载时间减少了大约 20%**，我是用 Chrome DevTools 的 Performance 面板来量的，特别是看 LCP（最大内容绘制），优化前后对比，大概减少了 20.8%。
+
+**用户参与度提升**的部分，我们主要關注页面停留时间、操作次数这些指标，后来我和mentor合作接入了 Mixpanel，数据显示优化之后参与度提高了大约 15.6%。
 
 ##### 如何优化组件渲染和状态管理 (Page Load)
 - Source: Page Load: https://cn.vuejs.org/guide/best-practices/performance.html
 - 组件渲染 (懒加载 / Memoization - see below)
 	- 懒加载: 按需加载
 	- Memoization: 应用`Computed`属性和`v-memo`避免大列表(1000+行)的冗余重新渲染
-- 状态管理 (Pinia: 分割global store - see below)
-
-##### State management状态管理
-- 集中状态管理(Pinia)：使用状态管理库来避免组件级数据的分散状态。
+- 状态管理 (Pinia: 分割global store)
+**集中状态管理(Pinia)**：使用状态管理库来避免组件级数据的分散状态。
 - Pinia提供了组合式风格的 API，最重要的是，在使用 TypeScript 时提供了更完善的类型推导。
 	- 类型推导是指 TypeScript 编译器能根据上下文自动推断出变量、函数参数或返回值的类型，而无需开发者显式指定类型注解。
 - 将全局状态分割成多个逻辑模块（stores）
@@ -330,18 +350,147 @@ Statement: Revamped invoice dashboards using Vue.js, achieving a **20%** reducti
 			- 避免大型渲染阻塞任务
 
 ##### User Engagement (15%)
-集成Mixpanel分析用户行为, 跟踪关键事件（例如，“发票编辑”，“发票过滤”）。优化后每个用户的日均会话: 3.2次 → 3.7次, 提升了15.6%。
+- 选择以下**简易指标**来衡量用户参与度: 0.5*页面停留时间 + 0.5*用户操作次数
+	- 优化前后的平均页面停留时间、操作次数进行对比
+- (future) 集成Mixpanel分析用户行为, 跟踪关键事件（例如，“发票编辑”，“发票过滤”）。优化后每个用户的日均会话: 3.2次 → 3.7次, 提升了15.6%。
+```
+let startTime: number;
+
+export default {
+  mounted() {
+    startTime = Date.now();
+    window.addEventListener("beforeunload", this.trackTimeOnPage);
+    document.addEventListener("click", this.trackClick);
+  },
+  beforeDestroy() {
+    window.removeEventListener("beforeunload", this.trackTimeOnPage);
+    document.removeEventListener("click", this.trackClick);
+  },
+  methods: {
+    trackTimeOnPage() {
+      const stayDuration = Date.now() - startTime;
+      console.log(`用户停留时间: ${(stayDuration / 1000).toFixed(2)} 秒`);
+      // 可以发送到后端：axios.post('/metrics', { stayDuration })
+    },
+    trackClick() {
+      // 每点击一次记录
+      console.log("用户点击了一次");
+      // 可以累加发送：axios.post('/metrics', { event: 'click' })
+    }
+  }
+};
+
+```
 
 #### 3 - (后端)REST API/优化数据交换/数据一致性
 Statement: Developed and maintained **RESTful APIs**, optimizing data exchange between financial services, resulting in a **25% reduction** in transaction processing time and improving data consistency by **30%**
 
 **API设计与测试**：用Swagger记录所有端点，Vitest单元测试，Jest/knex.js集成测试 - 使用测试数据库验证从API调用到查询执行再返回的整个流程（例如，发票編輯→更新）。
 
-**性能25%**：使用JMeter模拟高并发交易，对比优化前后的平均响应时间（如从800ms降至600ms）。
+##### 交易处理时间减少25%
+1. 自述
+交易处理时间的减少，主要是通过**优化数据交换**来实现的：
 
-**数据一致性30%**：事务包装器 - 在ACID兼容的数据库事务中包装相关操作，以确保原子性。
-- 将多个关联的数据库操作（如扣款、更新账单状态）包装在原子性事务中，避免部分失败导致数据错乱。
-- 验证：每日比对交易流水和账单状态，统计不一致的比例（如从5%降至3.5%，即提升30%）。
+首先，我確保了返回的数据结构只包含必要的字段。比如，在发票列表页面，原本接口会返回完整的发票对象，包括一些页面上用不到的字段。我优化后，只返回关键字段（如 initiator/distributor/state 等），提高了接口的响应速度。
+
+其次，我合并了多个原本独立的 API 请求。比方説，原先前端在展示发票详情时，需要分别请求发票信息、留言和用户信息，总共三次调用。我重新设计了一个聚合接口 `/api/invoice/summary/:id`，一次性返回所有需要的数据。这样前端只需发起一次请求，后端也只需一次数据库查询，就降低了网络延迟和系统负担。
+
+在性能指标方面，我记录了后端日志中的响应时长，再进行对比，`发现发票详情页的平均响应时间从大约 800ms 降到了 600ms，结合请求次数减少，`那麽算出整体处理时间缩短了大約 25%。
+
+1. 细节
+- 精简 API 返回结构 —— 减少不必要数据传输
+	- 搜索頁面返回結果表的時候，只需要展示發票的基礎信息（initiator/distributor/billing party/state/product name)，不需要加載發票的留言記錄
+	- 减少字段数量（从几十个字段 → 只保留6个必要字段）；
+	- SQL 只查一张表，避免多次联表或多查询；
+	- 提高响应速度，降低出错概率（更一致）；
+- 合并接口，减少重复调用
+	- 以前的做法：
+		- 前端先调 `/api/invoice/:id` 拿发票；
+	    - 再调 `/api/note/:invoiceId` 拿留言記錄；
+		- 再调 `/api/user/:id` 拿留言記錄上的用戶名称。
+	- ==> 用户操作一次，发了 **3 个 HTTP 请求**，服务端读取了 **3 次数据库**。
+	- 优化方案：
+		- 新接口 `/api/invoice/summary/:id` 一次性返回你需要的简明信息：
+	- 效果：
+		- 一个请求搞定所有数据；
+		- 显著减少了网络延迟和后端请求压力；
+		- 如果数据库结构清晰，一次 SELECT 比多次 SELECT 更快；
+		- **一致性提升**：所有信息来源于一次查询，数据同步性更好。
+- 測試：
+	- 步骤 1：在后端接口中添加响应时间统计，并将 `duration` 打印到console。
+	- 步骤 2：用脚本/Excel/日志分析工具计算平均响应时间
+```
+// 步骤 1 - invoiceController.ts
+export async function getInvoiceSummary(req: Request, res: Response) {
+  const start = Date.now();
+
+  try {
+    const invoice = await getInvoiceById(req.params.id);
+    const comments = await getCommentsForInvoice(req.params.id);
+    const user = await getUserForInvoice(invoice.userId);
+
+    const response = {
+      invoice,
+      comments,
+      user
+    };
+
+    const end = Date.now();
+    console.log(`[INFO] /invoice/summary/${req.params.id} took ${end - start}ms`);
+    
+    res.json(response);
+  } catch (error) {
+    console.error(`[ERROR] /invoice/summary failed`, error);
+    res.status(500).send("Internal Server Error");
+  }
+}
+```
+你可以在控制器或路由层加上 `startTime` 和 `endTime`，并将 `duration` 输出到日志系统（或简单记录在日志文件中做对比分析）。
+- **（future）性能25%**：使用JMeter模拟高并发交易，对比优化前后的平均响应时间（如从800ms降至600ms）。
+##### 数据一致性30%
+1. 自述
+为了防止用户重复提交导致的数据不一致问题，我从前后端两方面实现了**幂等性保障**：
+
+在前端，为了避免重复提交，一旦用户点击提交，按钮会立即禁用并显示“处理中”，防止因用户误操作或网络延迟而多次点击。
+
+在后端，我引入了 `request_id` 字段作为请求的唯一标识。如果检测到相同的 `request_id`，系统就会拒绝重复写入，确保数据操作的幂等性。
+
+为验证效果，我们使用了mock工具模拟高频提交，还人工比对线上和备份数据库中的关键记录，看有沒有数据偏差。综合评估后，我们估算数据一致性提升了大约 30%。
+
+1. 细节
+**避免重复读写、明确数据来源**
+- 加入“幂等性”逻辑（不用事务也能控一致性）
+- **问题**：用户可能多次点击“提交”按钮，导致重复写入。
+- **解决**：前端禁用按钮，后端使用请求ID去重。
+	- 限制前端重复提交（防抖处理)
+		- 提交后按钮 `disabled` -> 显示“处理中”状态
+	- 基于唯一请求 ID 进行写入去重
+		- 每一笔交易或操作请求，可以在客户端或服务端生成一个 `request_id`，用于去重判断。
+		- 简单高效，不用用到数据库事务或分布式锁
+```
+// 假设有个简单的交易处理 API
+app.post('/api/transaction', async (req, res) => {
+  const { request_id, user_id, amount } = req.body;
+
+  // 步骤 1：检查该 request_id 是否已处理过
+  const exists = await db.query(
+    'SELECT 1 FROM transactions WHERE request_id = $1 LIMIT 1',
+    [request_id]
+  );
+
+  if (exists.rowCount > 0) {
+    return res.status(200).json({ message: 'Duplicate request ignored' });
+  }
+
+  // 步骤 2：执行插入（此处省略验证与业务逻辑）
+  await db.query(
+    'INSERT INTO transactions (request_id, user_id, amount, status) VALUES ($1, $2, $3, $4)',
+    [request_id, user_id, amount, 'pending']
+  );
+
+  res.status(201).json({ message: 'Transaction submitted' });
+});
+```
 
 #### 4 - (DB)数据库重构/减少数据冗余/查询响应时间
 Statement: Optimized **SQL** queries and restructured the database schema for the invoice management system, reducing data redundancy by **35%**, cutting query response time by **40%** and boosting invoice retrieval efficiency across **50,000+** products
@@ -350,28 +499,173 @@ Statement: Optimized **SQL** queries and restructured the database schema for th
 - MySQL适合快速开发和高并发应用；PostgreSQL更适合需要稳定性和高级特性的企业应用程序。
 - 擅长复杂查询, 优先考虑安全性和标准
 
-**Data redundancy数据冗余 35%**
+##### Data redundancy数据冗余 35%
+1. 自述
+原本的产品表中嵌入了完整的发票信息字段，包括initiator、distributor、billing party 和区域信息。这种设计在查发票的時候比较方便，但实际运行过程中，我注意到有大量产品共享完全相同的发票信息，导致数据重复率非常高，整个表的体积也很大。
+
+为了解决这个问题，我提出的方案是把这些重复字段抽离出来，重构为一个**billing_patterns 表**，并在产品表中使用外键引用。`这个过程本质上是对数据库进行**第二范式（2NF）规范化。`
+
+重构后，我们通过 `INFORMATION_SCHEMA.TABLES` 和 `INFORMATION_SCHEMA.COLUMNS` 获取各个表的物理存储大小，发现数据库总体体积从约 **500GB** 降到了 **325GB**，大约减少了 **35%** 的冗余数据。
+
+2. 细节
+是如何评估和识别出存在数据冗余的问题的？
+- （這個公司的發票信息是根據四個因素定義的：initiator，distributor，billing party，和地區。）原先的數據庫設計將發票信息儲存在產品table裏，這樣查詢單個產品的發票信息快。但是發票信息的重複率很高，比如多個產品可能有同樣的發票信息，導致數據庫儲存了重複信息。
 **实现方法：**
-- **数据库规范化**：将重复存储的字段（如billing pattern）拆分到独立表中，通过外键关联。
+- **数据库规范化**：将重复存储的字段（如發票改爲billing pattern）拆分到独立表中，通过外键关联（這樣查詢單個產品的發票信息的速度可能會稍微降低？但是也降低了數據冗余）。
 - **统一数据源**：为通用数据（如bottle type价格）建立中央引用表，替代多处冗余存储。
 **测量方式：**
 - **存储空间对比**：通过数据库分析工具（如MySQL的`INFORMATION_SCHEMA`）统计优化前后总数据量（如从500GB降至325GB）。
 - **冗余字段审计**：手动或通过脚本扫描表结构，统计重复字段的消除比例。
+3. Implementation
+步驟 1：創建 `billing_patterns` 表
+```
+CREATE TABLE billing_patterns (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  initiator VARCHAR(255),
+  distributor VARCHAR(255),
+  billing_party VARCHAR(255),
+  region VARCHAR(100),
+  UNIQUE KEY uq_billing_pattern (initiator, distributor, billing_party, region)
+);
+```
+步驟 2：將產品表中原本的欄位去重插入新表
+```
+INSERT IGNORE INTO billing_patterns (initiator, distributor, billing_party, region)
+SELECT DISTINCT initiator, distributor, billing_party, region
+FROM products;
+```
+步驟 3：為產品表添加外鍵欄位
+```
+ALTER TABLE products ADD COLUMN billing_pattern_id INT;
+```
+步驟 4：關聯對應的 `billing_pattern_id` 到產品表，可以通過 `UPDATE JOIN` 實現
+```
+UPDATE products p
+JOIN billing_patterns bp
+  ON p.initiator = bp.initiator
+ AND p.distributor = bp.distributor
+ AND p.billing_party = bp.billing_party
+ AND p.region = bp.region
+SET p.billing_pattern_id = bp.id;
+```
+步驟 5：刪除原來重複的列
+```
+ALTER TABLE products
+DROP COLUMN initiator,
+DROP COLUMN distributor,
+DROP COLUMN billing_party,
+DROP COLUMN region;
+```
+額外：查看空間節省情況
+```
+SELECT
+  table_name,
+  ROUND((data_length + index_length) / 1024 / 1024 / 1024, 2) AS size_gb
+FROM information_schema.tables
+WHERE table_schema = 'your_database_name'
+ORDER BY size_gb DESC;
+```
+##### Query response time查询时间 40% -> 分页优化
+1. 自述
+原来的应用在用户搜索时，会把所有符合条件的数据一次性查出来然後返回给前端。数据量大的情況下，应用响应很慢，用户体验也差。所以我设计了一个「前五页预加载 + 之后按需加载」的策略来优化查询性能。
 
-**Query response time查询时间 40%** -> **分页优化**
+具体做法是这样的：每次用户搜索时，后端只返回前五页的数据（比如每页 20 条，总共 100 条）。这部分数据直接缓存到前端（在 Vue框架的data/state中）。只要用户在这五页内翻页，前端就直接从本地缓存拿数据，不需要再次发请求。
+当用户翻到第六页或更后面，前端才会再向后端发起新的分页查询，也是一种「lazy loading」。这样給后端減负，也让用户在大部分情况下能快速拿到结果。
+
+在数据库端，我是用 LIMIT 搭配 OFFSET 来实现分页。虽然 OFFSET 很大时查询效率会变差，不过我有先和 finance 部门确认过，他们大多数操作其实只会在前五页，所以这个策略是符合实际使用行为的。
+数据库层面我是用 `LIMIT` 搭配 `OFFSET` 来实现分页。虽然 OFFSET 很大的时候查询效率会变差`（因为数据库仍然要扫描前面所有记录再丢弃）`，但我和finance部门确认了：他们大部分操作都集中在前五页，所以这个方案在实际场景下是非常有效的。
+
+当然我也有考虑过其他优化方式，例如 keyset pagination（基于主键的游标分页）和索引。但是 keyset 分页不太方便跳页；另外，索引的维护成本在我们这种写入频繁的系统中也比较高。
+
+最后为了验证效果，我用 MySQL 的 EXPLAIN (看查了幾行) 和 SHOW PROFILES (看時間) 对比优化前后的查询：`最常见的查询响应时间从原来平均 1.2 秒缩短到 0.7 秒，`由此算出查询效率提升了 40%。
+
+2. 细节
 **实现方法：**
-- **高效分页策略**：将传统的`LIMIT-OFFSET`分页改为基于游标的分页（如使用`WHERE id > last_id`），避免全表扫描。
-- **索引优化**：为分页排序字段（如时间戳、ID）添加组合索引，加速数据定位。
+- **高效分页策略**：分页优化的核心思路，是**延迟加载（Lazy Loading）+ 限制查询范围（Limit + Offset）**，避免一次性查出全部数据，从而减少数据库的压力和前端加载时间。
+	- 每次搜索时，数据库查询只返回**前五页**的内容。例如，每页 20 条记录，五页就是 100 条记录：`SELECT * FROM invoices WHERE 条件 LIMIT 100 OFFSET 0;`
+	- 这样用户第一次搜索：只请求前 5 页（100 条）数据，用户快速看到结果，无需等待全部结果加载。
+		- 如果用户只在这五页之间翻来翻去，前端就用本地缓存的数据（在 Vue框架的 **data/state** 裡），不重复请求数据库。
+	- 用户点到第 6 页或之后：再向后端发起新的请求，比如：`SELECT * FROM invoices WHERE 条件 LIMIT 20 OFFSET 100;`
+	- 这属于“**按需加载**”策略，只有用户真的需要，才会加载后续数据。
+- 原系统可能在搜索时执行：
+	- `SELECT * FROM invoices WHERE 条件;`
+	- 这会把所有符合条件的记录都返回，数据量一大就非常慢。优化后通过 LIMIT 控制返回条数，极大减轻数据库负担。
+- **弊端：**
+	- 数据库仍需扫描整个表才能决定 OFFSET 应该跳过哪些记录，尤其 OFFSET 很大时（比如跳过前 10000 条）非常慢。
+		- 数据库**必须从第一条开始扫描（排序后）**，一条一条数到第 10000 条，才能知道从哪里开始取那 20 条。
+		- 即使那些 10000 条不返回，也要先从磁盘读出来、经过排序、然后扔掉。
+		- 这个「扫描 + 丢弃」的过程在 OFFSET 很大时代价就非常高。
+	- 所以即使分页减少了返回数据量，**没索引时查询仍然可能很慢**。
+- **高效分页策略2 (未采用)**：**基于上次查询的主键分页（keyset pagination）** 
+	- 记录上次的最大ID，下一页从该ID开始查询：`SELECT * FROM invoices WHERE id > 上一页最后一条id LIMIT 20;`
+		- 第1页查询：`SELECT * FROM invoices ORDER BY id ASC LIMIT 10;`
+			- 前端收到 10 条数据，其中最后一条记录的 ID 是 `105`。
+		- 前端再发出第2页请求：
+			- `SELECT * FROM invoices WHERE id > 105 ORDER BY id ASC LIMIT 10;`
+			- 这就跳过了前面的 105 条数据，而不需要数据库做 `OFFSET 105` 的操作。
+- 前端需要**记住上一页最后一条数据的主键 ID**
+	- 数据库本身不会记住你上一次查了什么，也不会自动提供“下一页”的 ID。只有前端知道用户上一次拿到的数据中最后一条记录的 ID 是多少。
+	- 所以前端要负责：
+		- 保存“上一页最后一条数据的 ID”
+		- 把这个 ID 传给后端，作为下一页查询的起点
+- **弊端1：如果用户跳页（比如從第 1 页点第 10 页），前端要链式计算多次分页的最后 ID**
+	- Keyset pagination 是**基于当前位置往前或往后翻页**的，无法直接跳转到“第 X 页”，不像传统分页（OFFSET）那样能指定页码。
+	- 所以前端可能需要：
+		- 把之前每一页的最后 ID 缓存下来
+		- 用户点“第 5 页”时，用“第 4 页最后一条的 ID”作为查询条件
+- **弊端2：页面刷新或返回时，前端要重新定位分页状态**
+	- 如果用户刷新页面或返回上一页，前端必须能重新定位分页的位置。Keyset pagination 不支持直接从页码定位，所以需要前端存储每一页的分页状态（比如每一页的起始 ID）。
+- **高效分页策略3 (未采用)**：为分页排序字段（如时间戳、ID）添加组合索引
+	- 在这个项目中，我们之所以没有对所有分页查询字段使用索引，主要出于**数据量规模以及写入频率的考虑**。
+	- 系统涉及的数据表体量非常大，包括全美上百万产品的发票数据。如果每个查询字段都建索引，创建和维护成本会很高。我们用了 `LIMIT + OFFSET` 做分页查询，但配合前端做了限制，每次最多只查前五页，这样可以控制查询范围，实际上也明显降低了查询时间，所以不靠索引也能跑得很快：
+		- **创建和维护索引的代价非常高**  
+			- 对于大表，索引的创建和更新会消耗大量的 CPU 和 IO 资源。尤其是在高频写入（如每天数十万到上百万条发票记录）的场景下，每次插入、更新或删除都会触发索引的重建或调整，这将直接影响整体系统的吞吐性能。
+	- 如果要再进一步优化，我会考虑针对高频查询条件做覆盖索引或改用 keyset 分页。
 **测量方式：**
 - **执行计划分析**：使用数据库工具（如`EXPLAIN`）确认分页查询是否命中索引，避免全表扫描。
 - **生产监控**：观察真实用户的分页操作延迟（如通过New Relic的APM指标）。
 -  **(future after switch to PostgreSQL) 压测对比**：通过pgBench等工具模拟分页请求，统计优化前后平均响应时间（如从200ms降至120ms）。
+3. Implementation
+步驟 1：查詢效能分析 - `EXPLAIN`
+```
+EXPLAIN SELECT * FROM products
+WHERE name LIKE '%Coke%'
+ORDER BY updated_at DESC
+LIMIT 20 OFFSET 100;
+```
+步驟 2：查詢效能分析 - `SHOW PROFILES`
+```
+SET profiling = 1;
 
+-- 你要分析的查詢
+SELECT * FROM products
+WHERE name LIKE '%Coke%'
+ORDER BY updated_at DESC
+LIMIT 20 OFFSET 100;
+
+-- 查看時間
+SHOW PROFILES;
+```
 #### 5 - (部署)Docker/CI-CD管道/缩短部署时间/100%自动化测试覆盖
 Statement: Created and deployed **CI/CD** pipelines using Docker, slashing deployment time by **50%** and ensuring 100% continuous integration and automated testing coverage 
 
-**CI/CD Pipeline**: 
-**运行(ESLint/Prettier)→前端 - 单元测试: Vitest @vue/test-utils→后端 - 集成测试: Docker启动一个PostgreSQL容器并测试查询→打包生成Electron安装程序**
+**CI/CD 管道和测试流程：**
+- 使用ESLint/Prettier 进行代码质量检查
+- 前端 - 我们用`Vitest @vue/test-utils`，对每个组件和功能进行了全面的单元测试，确保了100%的测试覆盖率。
+- 后端 - 使用`Jest`和`knex`进行集成测试，测试从API调用到查询执行再返回的整个流程。
+	- 首先通过`Docker`启动一个一次性的DB容器。
+	- `knex`用來定义数据库的表结构，然后插入测试数据。
+	- 然后使用`Jest`运行集成测试，确保了所有API端点正常運作。整个流程都在Docker容器中进行，确保了测试环境的一致性。
+- 打包生成Electron安装程序
+**缩短50%的部署时间：**  
+- 自动化的前端单元测试和後端集成测试缩短了大约50%的部署时间
+- 自动化
+	- **前端单元测试：**
+    - **自动化：** 在CI/CD管道中，使用`npm run test`（一个预先配置的npm脚本）来运行所有前端单元测试。每次提交代码时，CI系统（GitHub Actions）会自动执行这个脚本来运行所有单元测试。
+        
+	- **后端集成测试：**
+    - **自动化：** 在CI/CD管道中，我配置了脚本来自动启动一次性的Docker容器并运行数据库实例。在每次代码推送时，脚本会使用`docker-compose`命令自动启动一个DB容器并插入测试数据。
+	    - 测试数据写死为静态Seed文件（提高可重复性和可维护性）
 
 Integration Test Details: [[#Backend Test]]
 
@@ -399,25 +693,43 @@ Maintainability & Collaboration (维护和协作)
 Developed **REST API** for Jackson Laboratory using **Python** & **Flask** in **Scrum** environments
 在Scrum环境中使用Python/Flask为Jackson实验室开发REST API
 
+**Workflow Summary:**
+在这个capstone项目中，我主要负责基于**Python和Flask框架**开发REST API。整个开发流程是在**Scrum敏捷开发环境**中进行的，我们的团队由2位后端开发和1位前端开发组成，每个Sprint为期两周。
+
+在每个Sprint开始时，我们会召开Sprint Planning会议，mentor提出需求，我们团队一起拆解任务并估算Story Point。我主要负责实现用户相关功能的REST API，比如**用户注册、登录、查询基因集上传记录等端点**。每次迭代我大约会完成1到2个API端点的设计、编码和单元测试。
+
+举个例子，我实现了一个**基因集上传的POST端点**，用户可以通过这个API上传一个包含基因列表的文件，我在后端使用Flask解析上传内容，做初步校验后调用数据库模块，将数据写入PostgreSQL，并返回上传状态。这个接口同时支持错误处理，例如文件格式不符合时会返回400错误。
+
+在Scrum流程中，我们每天有15分钟的Daily Standup，汇报工作进展和遇到的问题；每个Sprint结束前，我们会进行**Code Review**，通常通过GitHub的Pull Request功能来完成。代码提交前，我会写好对应的**Pytest单元测试**，确保覆盖常见的输入输出场景。
+
 #### 2 - 微服务/更新停机时间
 Integrated analytical tools in microservices and mitigated downtime during tool update by 18%
 在微服务中集成分析工具，并将工具更新期间的停机时间减少18%
 
-**将网页功能拆分为两个独立的微服务**：
-- **用户浏览服务**：处理核心功能（页面渲染、用户交互、静态资源加载）
-- **分析服务**：处理数据分析（用户行为追踪、点击热图、性能监控）
+我们将原本耦合在一起的功能模块**拆分为两个独立的微服务**：
+- **用户浏览服务（Frontend Service）**：负责页面渲染、用户交互以及静态资源处理；
+- **分析服务（Analytics Service）**：处理基因数据分析。
+这两个服务通过REST API进行通信，使用HTTP协议交换数据。通过Flask框架可以简便地创建RESTful API，实现服务之间的交互。
+
+此外，两者采用**独立数据库**，分析服务使用 PostgreSQL（适合处理复杂的分析查询），浏览服务最初使用 SQ-Lite，后期迁移到 MySQL（提升了访问性能）。数据库层面的隔离进一步提升了系统的可扩展性和灵活性。
+```
 **通信机制**
+- 在高并发的情况下，我们还引入了 **异步消息队列**（如 Kafka），通过异步事件传递避免了同步通信的延迟，进一步优化了服务的响应时间和可靠性。
 - **异步消息队列**：通过 Kafka/RabbitMQ 传递分析事件（如用户点击、页面停留时间）
-- **独立数据库**：分析服务使用专用数据库（如 PostgreSQL），与用户浏览服务的业务数据库（如 SQ-Lite -> MySQL）隔离
+```
 **服务隔离的优势**
 - 微服务架构停机时间: 分析工具更新 5分钟（仅分析服务）, 用户浏览功能更新 0分钟（独立部署）
 
 **工具更新时的零停机策略18%**
+我们使用以下方式衡量停机时间：
+- **部署前后日志比对**：记录每次分析服务更新所需时间（从下线到完全恢复服务）
+- **用户体验指标**：重点关注分析工具更新期间，是否有用户反馈分析功能异常或延迟
+在引入微服务架构和蓝绿部署之后，我们将分析服务的平均更新停机时间从原本的**约6分钟减少至不到5分钟**，**核心用户浏览服务0停机**，综合计算整体系统对用户影响的**停机时间下降了约18%**。
+
 蓝绿部署（Blue-Green Deployment）
-- **并行环境**：同时运行新旧两套分析服务（v1 和 v2）
-- **流量切换**：通过负载均衡器逐步将流量从旧版本迁移到新版本
-数据兼容性保障
-- **API 版本控制**：
+- **并行环境**：分析服务 v1（旧版本）和 v2（新版本）在独立环境中同时运行
+- **流量切换**：借助Kubernetes 的服务路由机制，逐步将部分请求切换到新版本，确保新服务稳定后再进行完全切换
+- **API 版本控制**：提供版本号明确的 API 接口，避免更新过程中对前端服务造成影响。
 ```
 GET /api/v1/analytics   → 旧版分析工具
 GET /api/v2/analytics   → 新版分析工具
@@ -428,37 +740,63 @@ Developed backend business logics including user authentication/sign-on and gene
 开发后端业务逻辑，包括用户认证/登录和基因集上传；使用PostgreSQL和SQ-Lite进行数据的插入和检索
 
 **Why PostgreSQL and SQ-Lite**
-- **PostgreSQL**用于：
-    - 需要复杂查询的基因数据(如JSONB支持)
-    - 高并发用户认证(利用行级锁)
-- **SQLite**用于：
-    - 本地开发环境快速迭代
-    - 只读分析工具的数据持久化
+首先，**PostgreSQL**是一个功能强大的关系型数据库系统，我选择它主要是因为它支持复杂的查询、事务处理和数据一致性。在项目中，PostgreSQL主要用于处理更复杂的业务逻辑和大规模的数据存储。例如，用户认证和基因集上传的业务逻辑需要存储大量的结构化数据，且要求高并发和高可靠性，PostgreSQL在这方面表现非常好。
+
+而**SQ-Lite**则是在一些轻量级的需求中使用的，它作为开发环境的快速替代，使用SQ-Lite既能提高性能，也能减少数据库管理的复杂度。
+
+在实际操作中，我使用了SQL语句进行数据的插入和检索。例如，在PostgreSQL中，我编写了复杂的查询来检索基因集的相关信息，并确保在插入数据时能够进行完整性检查；而在SQ-Lite中，更多的是用于快速的数据存取，减少了查询的复杂度。
 
 #### 4 - Async Python/页面缓存/HTTPS/web验证
 Optimize runtime performance on concurrent tasks using **Async** Python and recurrent analytical queries using **Page Caching**; Implemented secure data access point using HTTPS protocols & web authentication
 使用Async Python优化并发任务的运行时性能，并使用页面缓存优化循环分析查询；使用HTTPS协议和web身份验证实现安全数据接入点
 
-**Async异步处理**：
+**如何使用Async Python优化并发任务的运行时性能？：**
 1. 使用asyncio处理基因数据分析任务
 	1. 用户提交分析请求 → 任务加入队列 → 立即返回“处理中”状态  
 	2. 后台异步执行分析 → 用户可继续浏览其他页面  
 	3. 分析完成后通过WebSocket/Polling通知用户  
-2. **事件循环机制**：使用`asyncio`库创建事件循环，通过协程（Coroutine）并发处理多个任务
-3. **并发模型优势**：
+```
+import asyncio
+
+async def analyze_data(task_id):
+    # 假设这段代码需要进行复杂的I/O操作，如数据库查询
+    data = await fetch_data_from_db(task_id)
+    result = process_data(data)
+    await store_result_in_db(result)
+    return result
+
+async def fetch_data_from_db(task_id):
+    # 异步数据库查询
+    await asyncio.sleep(2)  # 模拟数据库查询
+    return "data"
+
+async def main():
+    task_id = 123
+    result = await analyze_data(task_id)
+    print(f"Analysis Result: {result}")
+
+asyncio.run(main())
+```
+1. **事件循环机制**：通过`asyncio`的事件循环，所有I/O操作都在单线程下并发执行，避免了线程切换的开销，大大提高了并发性能。
 	1. 单线程处理数千并发任务
 	2. I/O等待时间（如数据库查询）可被其他任务利用
-4. **用户体验优化**
+2. **用户体验优化**
 	1. **进度反馈**：实时显示分析进度条
 	2. **中断恢复**：允许用户暂停/取消分析
 	3. **后台运行**：即使用户关闭页面，分析仍持续进行
 - (future) CPU密集型任务改用Celery+Redis
+```
+async def send_progress(progress):
+    # 通过WebSocket向前端发送实时进度
+    await websocket.send(f"Progress: {progress}%")
+```
 
 **页面缓存**：
+页面缓存主要用于减少频繁的重复查询，提升系统响应速度。在此项目中，我使用了双重缓存机制：
 1. **双重缓存机制** 
-	1. **浏览器缓存** (SessionStorage)：存储用户设备本地的历史分析结果
-	2. **服务器缓存** (LRU, 存储在服务器内存RAM中)：在服务端保存高频查询结果
-	3. **协同工作**：浏览器优先使用本地缓存，失效时向服务器请求更新
+	1. **浏览器缓存**：使用`SessionStorage`存储用户设备本地的历史分析结果，减少重复加载的时间。
+	2. **服务器缓存**：使用LRU在服务器端 (存储在服务器内存RAM中)保存高频查询的分析结果。
+	3. **协同工作**：用户提交分析请求时，先检查本地缓存，如果命中则直接显示结果；如果没有命中缓存，则向服务器请求结果，获取后存入缓存并显示。
 2. **识别重复查询**
 	1. 用户提交分析参数 → 生成唯一缓存键（如MD5哈希） → 匹配历史记录
 3. **本地存储策略**
@@ -484,7 +822,7 @@ Optimize runtime performance on concurrent tasks using **Async** Python and recu
     - 服务端验证后生成签名令牌（JWT, 有效期2小时）
     - 令牌包含用户ID、权限和有效期
 2. **访问阶段**：
-    - 客户端在Authorization头携带令牌
+    - 客户端在Authorization头携带JWT令牌
     - 服务端验证令牌签名和有效期
     - 拒绝无效/过期令牌
 3. 定期执行OWASP ZAP安全扫描
@@ -834,19 +1172,187 @@ CREATE TABLE notifications (
     - **加载时间对比**：动态页平均800ms → 静态页200ms（减少75%）。
     - **工具验证**：通过Lighthouse测试，性能评分从60提升至90+。
 
-## Java / SpringBoot
+## Python
+### 装饰器Decorator
+- 是一个函数，用来“包装”另一个函数，从而在不改变原函数代码的前提下，给它添加额外功能。
+- 有时候我们希望在多个函数中重复做一些“通用的事情”，比如： 打印日志, 测试运行时间。
+- 我们不想每次都手动复制粘贴这些逻辑，所以就可以用装饰器来“自动地”加在函数前后。
+```python
+def sample_decorator(func):
+    def wrapper(*args, **kwargs):
+        print("调用函数之前")
+        func(*args, **kwargs)
+        print("调用函数之后")
+        return result
+    return wrapper
+
+@sample_decorator  # 相当于 `say_hello = my_decorator(say_hello)`
+def say_hello(name):
+    print(f"Hello, {name}!")
+
+say_hello("World")
+```
+
+### 怎么写private私有变量/保护变量
+- Python并没有像 Java 或 C++ 那样真正意义上的“私有变量”。  
+- 但是，Python 提供了一种**命名约定**来表示变量是“私有的”，也就是说，**不建议在类的外部直接访问它**。
+```python
+class Person:
+    def __init__(self, name, gender, age):
+        self.name = name        # 公有变量
+        self._gender = gender   # 保护变量
+        self.__age = age        # 私有变量: 在变量前面加上两个下划线 `__`，来表示这个变量是私有的。
+
+    def get_age(self):
+        return self.__age
+
+p = Person("Alice", "F", 10)
+print(p.name)         # 可以访问
+print(p._gender)      # 虽然能访问，但不建议在外部用
+print(p.__age)        # 会报错！AttributeError
+# 这个时候直接访问 `__age` 是不被允许的，因为 Python 会进行**名称改写（name mangling）**，其实它会变成 `_Person__age`。
+print(p._Person__age)  # 还是能“强行”访问（不推荐）
+```
+## Java
+### 死锁以及如何避免
+两个或多个线程在运行过程中，**因为争夺资源而互相等待**，导致所有线程都无法继续执行的情况。
+
+比如説，线程 A 拿到了资源 1，想要获取资源 2；线程 B 拿到了资源 2，正好也想获取资源 1；结果两个线程都在等待对方释放资源，就进入了死锁状态。
+
+**死锁发生的四个必要条件：**
+1. 互斥条件：资源一次只能一个线程用
+2. 占有并等待：拿着自己的资源，还想要别人的(两人都不肯退)
+3. 不可抢占：资源不能被强行抢走(释放)，只能被占用线程主动释放
+4. 循环等待：两个或多个线程形成资源的循环等待链 (A等B，B等A)
+
+**只要打破其中一个条件，就可以避免死锁。：**
+1. **资源排序法**：按固定顺序申请资源
+    给所有资源定义一个固定的获取顺序，线程必须按照这个顺序去申请资源，避免形成循环等待。
+2. **一次性申请所有资源**：一次申请所有需要的资源
+    如果线程需要多个资源，必须一次性申请完，拿不到就全部释放，稍后重试。
+3. **使用 `tryLock()` 等带超时的方法**：等太久就放弃重试
+    像 `ReentrantLock` 提供了 `tryLock(long timeout)` 方法，线程在一定时间内拿不到锁就放弃，从而避免一直等待。
+
+### final, finally 和 finalize 的区别
+**`final` 是一个关键字，用于声明"不可更改"的内容。**
+- 如果用在变量上，表示这个变量是常量，一旦赋值就不能再修改。
+- 如果用在方法上，表示这个方法不能被子类重写。
+- 用在类上，则表示这个类不能被继承。  
+    它的主要作用是提供不可变性和安全性。
+**`finally` 是和 `try-catch` 异常处理结构配合使用的。**
+- 不管是否发生异常，`finally` 块里的代码都会被执行。
+- 它常用于释放资源，比如关闭文件流、数据库连接等，确保资源不会泄露。  
+    这部分对程序的健壮性和资源管理非常关键。
+**`finalize` 是 `Object` 类里的一个方法，主要用于垃圾回收前的清理操作。**
+- 当垃圾回收器准备回收一个对象时，会调用它的 `finalize()` 方法。  
+    不过这个方法不推荐手动使用，因为它的调用时机不确定，而且在 Java 9 之后也被标记为“过时”，更推荐使用 `try-with-resources` 或者显式的资源释放方式。
+
+### 静态变量和实例变量
+**静态变量**
+静态变量是用 `static` 关键字修饰的，属于**类本身**，而不是与类的实例（对象）关联。
+- 内存在类加载时分配，
+- 所以它在**类加载时就会被创建**，在内存中只有一份`(在方法区中的静态区)`，所有对象共享同一个静态变量。
+- 生命周期与类相同(程序运行期间)
+**实例变量**
+实例变量属于类的实例(对象)，必须通过对象实例访问，每个实例拥有独立的副本。
+-  每创建一个对象，实例变量就会被初始化一次`(在堆内存中的对象内部)`，**互相之间互不影响**。
+- 生命周期与与对象实例相同(对象被回收时销毁)
+
+### 静态变量和静态方法
+在Java中，静态变量和静态方法是与类本身关联的，而不是与类的实例（对象）关联。它们在内存中只存在一份，可以被类的所有实例共享。
+
+**静态变量**: 在类中使用 `static` 关键字声明的变量，它们属于类而不是任何具体的对象。
+1. **共享性**：所有**该类的实例共享同一个**静态变量。如果一个实例修改了静态变量的值，其他实例也会看到这个更改。
+2. **初始化**：静态变量在类被加载时初始化，只会对其进行一次分配内存。
+3. **访问方式**：静态变量可以直接通过类名访问，也可以通过实例访问，但推荐使用类名。
+4. **使用场景**：常用于需要在所有对象间共享的数据，如计数器、常量等。
+```
+public class MyClass {
+    static int count = 0;   // 静态变量
+
+    public MyClass {count++;    // 每创建一个对象，静态变量自增}
+
+    public static void printStaticVar() {System.out.println("Static Var: " + count);}
+}
+
+// 使用示例
+MyClass obj1 = new MyClass();
+MyClass obj2 = new MyClass();
+MyClass.printStaticVar();  // 输出 Static Var: 2
+```
+
+**静态方法**: 在类中使用 `static` 关键字声明的方法，也属于类而不是任何具体的对象。
+1. **无实例依赖**：静态方法可以在没有创建类实例的情况下调用。对于静态方法来说，不能直接访问非静态的成员变量或方法，因为静态方法没有上下文的实例。
+2. **访问静态成员**：静态方法可以直接调用其他静态变量和静态方法，但不能直接访问非静态成员。
+3. **多态性**：静态方法不支持重写（Override），但可以被隐藏（Hide）。
+4. **使用场景**：常用于助手方法（utility methods）、获取类级别的信息或者是没有依赖于实例的数据处理。
+```
+public class MyClass {
+    static int count = 0;   // 静态变量
+
+    // 静态方法
+    public static void incrementCount() {count++;}
+
+    public static void printStaticVar() {System.out.println("Static Var: " + count);}
+}
+
+// 使用示例
+MyClass.incrementCount();   // 调用静态方法
+MyClass.printStaticVar();   // 输出 Static Var: 1
+```
+
+### 静态方法和实例方法
+静态方法（Static Method）和实例方法（Instance Method）的核心区别在于：**是否依赖对象来调用，以及能否访问类的成员变量。**
+
+**静态方法（static method）**
+- 使用 `static` 关键字修饰
+- **属于类本身**，不属于任何具体对象
+- 可以 **不创建对象就调用**，比如：`ClassName.methodName()`
+- **不能访问实例变量或实例方法**，因为它没有 `this` 引用
+- 常见于工具类，比如 `Math.abs()`、`Collections.sort()` 等
+
+**实例方法（非 static 方法）**
+- 不使用 `static` 修饰
+- **属于对象**，必须先创建实例（new 对象）才能调用
+- 可以访问类中的**实例变量**和**其他实例方法**
+- 适用于依赖对象状态的方法
+
+### ArrayList和LinkedList
+数据结构方面：
+- ArrayList：内部使用动态数组存储数据。因此，它支持随机访问，通过索引访问元素非常快，比如 `get(index)` 是 O(1) 的时间复杂度。  
+	- 但是如果涉及到中间插入或删除元素，就比较慢了，因为后面的元素需要**整体移动**，插入/删除是 O(n)。
+- LinkedList：内部使用双向链表存储数据。这使得在列表的开头或结尾插入、删除元素非常快，时间复杂度为O(1)。  
+	- 但查找元素，比如 `get(index)`，需要一个个往后找，时间复杂度是 O(n)。
+
+性能方面：
+- ArrayList：添加元素时如果需要扩容（即当前数组已满），则需要复制原数组到新的更大的数组，这样的操作时间复杂度为O(n)。
+- LinkedList：每个节点还需要额外存前后指针，内存开销更大。
+
+### HashMap和ConcurrentHashMap
+Source: https://xiaolincoding.com/backend_interview/internet_giants/elme.html#%E8%AE%B2%E4%B8%8Bhashmap
+**HashMap**
+HashMap 数据结构是数组和链表，HashMap通过哈希算法将元素的键（Key）映射到数组中的槽位（Bucket）。如果多个键映射到同一个槽位，它们会以链表的形式存储在同一个槽位上，所以冲突很严重，一个索引上的链表非常长，效率就很低了 - O(n)。
+
+**JDK1.8**: 当一个链表的长度超过8的时候就转换数据结构，使用**红黑树**，查找时使用红黑树，时间复杂度O（log n），可以提高查询性能，在数量较少时(<6)，会将红黑树转换回链表。
+
+- 线程不安全 - 同时往车里放商品，可能导致：数据丢失, 数据覆盖, 死循环
+
+**ConcurrentHashMap**
+使用数组加链表的形式实现
+- 虽然是线程安全的，但因为它的底层实现是数组 + 链表的形式，所以在数据比较多的情况下访问是很慢的，因为要遍历整个链表，而 JDK 1.8 则使用了数组 + 链表/红黑树的方式优化了 ConcurrentHashMap 的实现，从之前的 O(n) 优化到了 O(logn) 的时间复杂度。
+
 ### 常见设计模式
 1. 单例模式 (Singleton)
 	1. 保证一个类只有一个实例
 	2. 例子：数据库连接池、Spring的默认Bean
 ```
-public class BurgerShop {
-    private static BurgerShop instance;
-    private BurgerShop() {}  // 私有构造
+public class TikTok {
+    private static TikTok instance;
+    private TikTok() {}  // 私有构造
     
-    public static BurgerShop getInstance() {
+    public static TikTok getInstance() {
         if(instance == null) {
-            instance = new BurgerShop();
+            instance = new TikTok();
         }
         return instance;
     }
@@ -875,38 +1381,411 @@ public class CarFactory {
 5. **观察者** - 消息通知（当对象状态变化时自动通知依赖它的对象，例子：Java中的EventListener）
 6. **策略** - 多种解决方案（封装算法，使它们可以互相替换，例子：Java中的Comparator）
 
-### SpringBoot常见注解
+### Java 注解(Annotation)的作用
+注解是一种元数据，用来为代码添加“说明”。它本身不会直接影响程序的逻辑执行，但可以被编译器、开发工具或框架读取并用于特定的处理。
 
-| `@SpringBootApplication` | 启动类必备     |
-| ------------------------ | --------- |
-| `@RestController`        | 声明REST控制器 |
-| `@Autowired`             | 自动注入依赖    |
-| `@Service`               | 业务逻辑层     |
-| `@Repository`            | 数据访问层     |
-| `@Component`             | 通用组件      |
-| `@Configuration`         | 配置类       |
-| `@Bean`                  | 声明一个Bean  |
-| `@Value`                 | 注入配置值     |
-| `@RequestMapping`        | 映射URL路径   |
-####  @Autowired 和 @Resource 注解
-TBC (still not fully clear)
-都是用来实现依赖注入的注解，区别如下：
-- **来源**:`@Autowired` 是Spring框架提供的注解。`@Resource` 是Java本身提供。
-- **依赖性**：使用`@Autowired` 时，通常需要依赖Spring的框架。使用`@Resource` 时，即使不在Spring框架下，也可以在任何符合Java EE规范的环境中工作。
-- **使用场景**：当你需要更细粒度的控制注入过程，或者你需要支持Spring框架之外的Java EE环境时，`@Resource` 注解可能是一个更好的选择；如果你完全在Spring的环境下工作，并且希望通过类型自动装配，`@Autowired` 是更常见的选择。
-- **属性**:`@Autowired` 可以不指定任何属性，仅通过类型自动装配。`@Resource` 可以指定一个名为`name`的属性，该属性表示要注入的bean的名称。
-- **注入方式**：`@Autowired` 默认是通过类型（byType）进行注入。如果容器中存在多个相同类型的实例，它还可以与`@Qualifier`注解一起使用，通过指定bean的id来注入特定的实例。`@Resource` 默认是通过名称（byName）进行注入。如果未指定名称，则会尝试通过类型进行匹配。
+比如最常见的 `@Override` 在编译时进行检查，确保重写了父类的方法，防止拼写错误或者签名不一致。
 
-✔ **用@Autowired当**：
-- 项目纯Spring环境
-- 喜欢简洁的按类型自动装配
-- 需要和其他Spring特性（如@Primary）配合使用
+其次，注解也被用于框架中，比如JUnit：`@Test` 会告诉测试框架这个方法是一个测试用例（或者 `@Autowired` 可以让 Spring 自动进行依赖注入）。
 
-✔ **用@Resource当**：
-- 需要兼容非Spring环境
-- 想要更精确地按名称注入
-- 项目已经有Java EE的依赖
+`另外，注解还可以自定义，我们可以根据业务需求定义自己的注解，并结合反射机制在运行时动态处理这些信息，从而实现更灵活的逻辑控制，比如权限校验、日志记录等。`
+`所以整体来说，注解的作用就是给代码添加“说明书”，让编译器、开发工具或框架更智能地处理程序逻辑，提高代码的可读性和可维护性。`
 
+### Java的不可变类（Immutable Class）
+一旦创建，它的对象状态就**不能被修改**的类。也就是说，所有字段在对象创建后都保持不变。
+- 例子：`String` 类 -> `String a = "hello";`，每次修改其实是创建了一个新的字符串对象，原来的内容不会变。
+
+**实现一个不可变类：**
+1. **类要声明为 `final`**，防止被继承后修改行为。
+2. **所有字段都要是 `private final`**，保证只在构造函数中赋值一次。
+3. **没有 setter 方法**，防止外部修改字段值。
+4. **如果字段是对象引用，要做 defensive copy（防御性拷贝）**，防止外部通过引用修改内部状态。
+不可变类的优点：
+- **设计简单**：因为状态不会变化，逻辑更容易维护。
+- **线程安全**：多个线程访问同一个对象不会有竞争条件；
+- **可缓存、可复用**：比如在哈希表中作为 key 很安全；
+```java
+// 这个 `Person` 类就是不可变的，一旦创建后 `name` 和 `age` 无法更改。
+public final class Person {
+    private final String name;
+    private final int age;
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+}
+```
+
+### 访问修饰符（Access Modifiers）
+private: 同类 (只能在 **本类内部** 访问)
+default: 同类+同包 (没有写修饰符，就属于默认权限，只能在 同一个包中 被访问)
+protected: 同类+同包+子类 (不同包的**子类**)
+public: 同类+同包+子类+其他包
+
+### 基本类型（Primitive Type）和 包装类型（Wrapper Class）
+Java 中有 8 种基本类型：`byte`、`short`、`int`、`long`、`float`、`double`、`char`、`boolean`
+- 这些类型是 **存储在栈内存中的值类型**，性能高，占内存少。
+Java 为每个基本类型提供了一个对应的 **包装类**，这些类都位于 `java.lang` 包中：
+    - `int` → `Integer`，`boolean` → `Boolean` ……以此类推
+- 包装类是 **对象类型（引用类型）**，存储在堆内存中，可以用于集合等只支持对象的场景。
+从 Java 5 开始，Java 支持自动转换：
+- **装箱（boxing）：基本类型 → 包装类型**
+- **拆箱（unboxing）：包装类型 → 基本类型**
+```
+Integer x = 10;   // 自动装箱：int → Integer
+int y = x + 5;    // 自动拆箱：Integer → int
+```
+
+### Exception 和 Error 的区别
+`Exception` 和 `Error` 都是从 `Throwable` 类继承下来的，用来表示程序运行中发生的问题。
+
+**Exception（异常）：**
+程序**可以捕获和处理**的问题，又可以分为两类：
+1. **Checked Exception（受检异常）**
+    - 用 `try-catch` 处理，或者在方法上用 `throws` 抛出。
+    - 比如：`IOException`、`SQLException`、`FileNotFoundException`
+    - 适用于**程序外部的问题**，比如文件、网络、数据库等操作失败。
+        
+2. **Unchecked Exception（非受检异常）**
+    - 编译时不强制处理，运行时可能会抛出。
+    - 是 `RuntimeException` 的子类，比如：`NullPointerException`、`IndexOutOfBoundsException`、`IllegalArgumentException`
+    - 多数是**程序逻辑错误**导致的。
+        
+**Error（错误）：**
+ **JVM 层面的问题**，通常是程序**无法恢复或处理的**，通常不处理，处理也没意义，应该让程序崩溃。
+- 常见`Error` ：`OutOfMemoryError` (内存溢出), `StackOverflowError` (栈溢出), `NoClassDefFoundError` (类加载失败)
+- 这些错误大多数表示 JVM 本身出了问题，不是业务代码可以解决的。
+
+### 方法重载（Overloading）和方法重写（Overriding）
+**方法重载**: 编译时多态，让方法有多个版本
+- **在同一个类中**，**方法名相同，但参数列表不同**（参数个数、类型不同，顺序不同也可以）。
+- 发生在 **同一个类** 中
+- **返回值可以不同**，但不能仅靠返回值区分
+- 常用于构造函数或提供多种调用方式
+```
+public class Calculator {
+	// 这里的 `add` 方法就是重载了，参数不一样，调用时编译器会自动根据参数类型来选择合适的方法。
+    public int add(int a, int b) { return a + b; }
+
+    public double add(double a, double b) { return a + b; }
+
+    public int add(int a, int b, int c) { return a + b + c; }
+}
+```
+
+**方法重写**: 运行时多态，让子类可以定制父类的方法行为。
+- **子类继承父类时**，对子类中继承过来的方法进行**重新定义**。
+- 发生在 **父类和子类之间**
+- **方法名、参数列表完全一致**
+- 返回值类型必须兼容（Java 5 之后允许协变返回）
+- 访问修饰符不能比父类更严格
+- 需要用 `@Override` 注解标记（不是必须，但强烈推荐）
+```
+class Animal {
+    public void speak() { System.out.println("Huzzh"); }
+}
+
+class Cat extends Animal {
+	// 重写了 `Animal` 的 `speak()` 方法，实现了多态。
+    @Override
+    public void speak() { System.out.println("Meow"); }
+}
+```
+
+### Interface（接口）和 Abstract Class（抽象类）
+**`interface` 是接口**，适合用来定义规范或功能，强调的是：**我能做什么**。
+- 沒有构造函数
+- 一个类可以实现多个接口
+- 修饰符：方法默认 `public abstract`，变量是 `public static final`
+**`abstract class` 是抽象类**，适合用来表示一类实体的共性，强调的是：**我是什么**。
+- 可以有构造函数和完整方法实现
+- 一个类只能继承一个抽象类
+```
+interface Flyable {
+    void fly();  // 抽象方法
+}
+
+abstract class Animal {
+    String name;
+
+    Animal(String name) { this.name = name; }
+
+    abstract void speak();  // 抽象方法
+
+    void sleep() { System.out.println("正在睡觉"); }
+}
+```
+
+### 泛型（Generics）
+为什么需要泛型？
+1. **类型不安全**：可能加入错误类型对象，编译器不会报错
+2. **需要强制类型转换**，容易抛出 `ClassCastException`
+有了泛型后的好处：
+3. **类型安全**：编译阶段就能检查出类型错误，避免了在运行时出现类型转换异常，避免了在运行时出现类型转换异常。
+4. **省去了强制类型转换**
+5. **代码更清晰，更易维护**
+6. **提高代码复用性**
+```
+//Case: 沒有泛型
+List list = new ArrayList();
+list.add("hello");
+list.add(123);  // 不报错
+
+String str = (String) list.get(0);  // 要强转
+---------------
+//Case: 有泛型
+List<String> list = new ArrayList<>();
+list.add("hello");
+// list.add(123);  // 编译期报错！
+
+String str = list.get(0);  // 不用强转
+```
+
+### hashCode() 和 equals()和==
+== 比较的是两个引用**是否指向同一个对象地址（内存地址）**。
+- 比如，System.out.println(new String("tt") == new String("tt")); // false，因为是两个不同的对象
+
+equals()方法：
+- 用来比较两个对象的“**内容是否相等**”
+- 默认情况下，`Object` 类中的 `equals()` 是比较对象的地址（）
+- 通常我们需要 **重写** `equals()` 方法，定义什么情况下两个对象被认为是“相等的”
+
+hashCode()方法：
+- 返回一个整数值，用来表示对象的**哈希值**
+- 主要用于 **哈希结构中确定对象的存储位置**，比如 `HashMap`、`HashSet`
+- 默认情况下，`Object` 中的 `hashCode()` 也是根据内存地址计算的
+- **如果两个对象通过 `equals()` 判断相等，则它们的 `hashCode()` 必须相同**。但反过来不一定。
+	- 如果你重写了 `equals()`，也应该同时重写 `hashCode()`。
+	- 如果你只重写了 `equals()` 而没重写 `hashCode()`，在使用 `HashSet` 或 `HashMap` 时就会出现**“相等对象存进了不同的位置”**的问题。
+```
+// equals() Example
+@Override
+public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (obj == null || getClass() != obj.getClass()) return false;
+    Person person = (Person) obj;
+    return age == person.age && name.equals(person.name);
+}
+
+// hashCode() Example
+Set<Person> set = new HashSet<>();
+Person p1 = new Person("小明", 20);
+Person p2 = new Person("小明", 20);
+set.add(p1);
+set.add(p2);  // 如果没重写 hashCode，会被认为是两个不同对象！
+```
+
+### 深拷贝和浅拷贝的区别
+**浅拷贝（Shallow Copy）**
+- **只复制对象本身，里面的引用对象不会复制**
+- 拷贝后的对象与原对象内部仍然**共享同一个引用对象**
+**深拷贝（Deep Copy）**
+- **不仅复制对象本身，还复制它引用的所有子对象**
+- 原对象和拷贝对象之间完全独立，互不影响
+实现方式有：
+1. 手动重写 `clone()` 方法，对每个字段递归 clone
+2. 使用序列化与反序列化（如 `ObjectOutputStream`）
+3. 使用第三方库（如 Apache Commons Lang 的 `SerializationUtils`）
+```
+class Person {
+    String name;
+    Address address;
+}
+
+Person p1 = new Person();
+p1.name = "Alice";
+p1.address = new Address("NY");
+
+// 浅拷贝
+Person p2 = p1;
+// 此时：`p1.address == p2.address`，修改 `p2.address.city` 会影响 `p1`
+```
+
+### volatile 关键字
+TBC (still not clear)
+它的作用是确保 **多线程环境中变量的可见性**，并防止 **指令重排序**。
+- **保证可见性**：
+    - 当一个线程修改了 `volatile` 变量的值，其他线程能立即看到这个修改，避免了缓存数据的问题。
+    - 在多线程环境中，JVM 会把 `volatile` 变量的值直接从主内存读取，而不是从线程的本地缓存中读取。
+- **防止指令重排序**：
+    - `volatile` 还能够禁止 JVM 对该变量进行 **指令重排序优化**，保证代码的执行顺序符合预期。
+    **注意：** `volatile` 只能保证单一的 **变量操作**（读/写）具有原子性，但 **复合操作**（如 `i++`）不能保证原子性。
+**限制**
+1. **只保证可见性，不保证原子性**：
+    - `volatile` 只能保证 **单一操作**（如读取和写入）的原子性，但无法保证复合操作（例如 `i++`）的原子性。
+2. **不能用于替代锁**：
+    - 如果要操作复合操作，仍然需要使用 **同步（synchronized）** 或 **原子变量**。
+```
+public class Example {
+	// 适用于 **状态标志**（例如在多线程中表示某个线程是否继续运行）
+    private volatile boolean flag = false;
+
+    public void toggleFlag() { flag = !flag; }
+
+    public boolean checkFlag() { return flag; }
+}
+```
+
+### 类的加载过程
+加载 → 连接（验证、准备、解析）→ 初始化 → 使用 → 卸载
+一、加载（Load）
+- JVM 通过类的 **全限定名**（即包名+类名）查找 `.class` 文件
+- 读取字节码内容，生成对应的 `Class` 对象
+- 这个阶段还确定使用哪个 **类加载器（ClassLoader）**
+二、连接（Link）
+连接过程又分为三个小阶段：
+1. **验证（Verify）**：校验 `.class` 文件是否合法，比如字节码是否被篡改
+2. **准备（Prepare）**：为静态变量分配内存，并设置默认值（不是赋初始值）
+3. **解析（Resolve）**：将类、接口、字段、方法等的符号引用转换为直接引用
+三、初始化（Initialize）
+- 真正执行类中的 **静态初始化代码（静态代码块）和静态变量赋值**
+- 这是类加载的最后一步，**只有到了这一阶段，类才真正“初始化完毕”**
+四、使用（Use）
+- 类已经加载好了，JVM 就可以创建对象、调用静态方法、访问字段等
+- 这是我们代码运行的阶段
+五、卸载（Unload）
+- 类不再被使用时，JVM 会将类卸载出内存（这个过程不常发生）
+- 卸载由垃圾回收器自动完成，开发者无法手动控制
+
+### 内部类（Inner Class）
+定义在 **另一个类内部的类**，可以更好地组织代码、封装逻辑。
+- 成员内部类: 可以访问外部类的所有成员（包括 private）
+```
+public class Outer {
+    private String name = "外部类";
+
+    class Inner {
+        void sayHello() { System.out.println("Hello from " + name); }
+    }
+}
+// 调用方式：
+Outer outer = new Outer();
+Outer.Inner inner = outer.new Inner();
+inner.sayHello();
+```
+- 局部内部类: 只能在当前方法中使用
+```
+public void doSomething() {
+    class LocalInner {
+        void print() {
+            System.out.println("局部内部类");
+        }
+    }
+    LocalInner local = new LocalInner();
+    local.print();
+}
+```
+- 匿名内部类: 常用于简化接口或抽象类的实现（常用于回调）
+```
+Runnable r = new Runnable() {
+    public void run() {
+        System.out.println("匿名内部类实现线程");
+    }
+};
+new Thread(r).start();
+```
+- 静态内部类: 类似外部类，不可以访问外部类的非静态成员
+```
+public class Outer {
+    static class StaticInner {
+        void show() { System.out.println("我是静态内部类"); }
+    }
+}
+// 调用方式：
+Outer.StaticInner inner = new Outer.StaticInner();
+inner.show();
+```
+
+### 栈（Stack）和队列（Queue）
+栈是后进先出，适合处理临时数据结构；队列是先进先出，适合调度与资源管理，两者在 Java 中有不同的类支持和应用场景。
+
+### 动态代理（Dynamic Proxy）
+TBC (still not clear)
+代理就是：通过一个中间对象（代理对象）来间接调用目标对象的方法。
+Java 中有两种代理方式：
+- **静态代理**：代理类是提前写好的
+- **动态代理**：代理类是**在运行时动态生成**的（在运行时创建代理对象的机制，常用于在不改动源码的情况下，对方法进行增强）
+
+Java 提供了两种主流的动态代理实现方式：
+1. **JDK 动态代理**（基于接口）
+	- 使用 Java 提供的 `java.lang.reflect.Proxy` 和 `InvocationHandler`
+	- 要求目标类必须实现一个或多个接口
+2. **CGLIB 动态代理**（基于继承）
+	- 使用第三方库 CGLIB（Spring AOP 就是用它）
+	- 通过**继承目标类并重写方法**来实现代理
+	- 适用于没有接口的类
+3. 应用场景：日志记录, 权限控制, 缓存处理
+```
+public interface UserService {
+    void login(String username);
+}
+
+public class UserServiceImpl implements UserService {
+    public void login(String username) {
+        System.out.println(username + " 登录成功");
+    }
+}
+------------------------
+import java.lang.reflect.*;
+
+public class ProxyFactory {
+    public static Object getProxy(Object target) {
+        return Proxy.newProxyInstance(
+            target.getClass().getClassLoader(),
+            target.getClass().getInterfaces(),
+            new InvocationHandler() {
+                public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                    System.out.println("开始执行方法：" + method.getName());
+                    Object result = method.invoke(target, args);
+                    System.out.println("方法执行完毕");
+                    return result;
+                }
+            }
+        );
+    }
+}
+
+----------------------
+// Use Case
+UserService service = (UserService) ProxyFactory.getProxy(new UserServiceImpl());
+service.login("张三");
+```
+
+### SPI（Service Provider Interface）机制
+TBC (still not clear)
+它允许框架（或模块）在 **运行时动态加载第三方实现类**，实现了 **模块解耦** 和 **插件化开发**。
+```
+// 1. 定义服务接口
+public interface MyService {
+    void execute();
+}
+// 2. 创建实现类
+public class MyServiceImplA implements MyService {
+    public void execute() {
+        System.out.println("A 执行");
+    }
+}
+// 3. 配置 SPI 描述文件：
+// 3.1 在资源目录下添加文件：
+META-INF/services/com.example.MyService
+// 3.2 文件内容写上实现类的全限定类名：
+com.example.MyServiceImplA
+com.example.MyServiceImplB
+// 4. 加载服务
+ServiceLoader<MyService> loader = ServiceLoader.load(MyService.class);
+for (MyService service : loader) {
+    service.execute();
+}
+```
 ### Java反射（Reflection）
 TBC (still not fully clear)
 反射可以让程序在运行时查看和操作类、方法、字段等内部信息。
@@ -958,6 +1837,60 @@ TBC (still not fully clear)
 不安全集合（需要自己加锁）：`ArrayList`, `HashMap`, `HashSet`, `LinkedList`
 安全集合：`Vector` (老古董，不推荐), `Hashtable` (老古董，不推荐), `ConcurrentHashMap` (推荐), `CopyOnWriteArrayList` (读多写少场景推荐), `Collections.synchronizedList()` (包装器方法)
 
+### wait() 和 sleep()
+wait() 用于线程通信并且会释放锁，而 sleep() 是让线程暂停一段时间但不释放锁。
+- wait() 一般配合 notify() 使用，常用于生产者-消费者模型中的线程通信。
+- sleep() 是一个静态方法，常用于模拟延时或调度控制。
+```
+synchronized(obj) {
+    obj.wait();  // 当前线程进入等待状态，并释放 obj 的锁
+}
+--------
+Thread.sleep(1000); // 当前线程睡眠 1 秒，不释放任何锁
+```
+
+### 悲观锁和乐观锁的区别
+悲观锁的思想是：**假设总是会发生并发冲突**，所以在访问数据前就上锁，**其他线程不能同时访问这份数据**。
+- 常见实现方式有：`synchronized`, `ReentrantLock`, 数据库的 `select ... for update`
+乐观锁的思想是：**假设并发冲突很少发生**，所以在读数据时不加锁，**在写入时检查是否有冲突**，如果有冲突再重试。
+- 常见实现方式是 **CAS（Compare And Swap）比较并交换**。
+- Java 中常用的类有：
+    - `AtomicInteger`、`AtomicReference`（`java.util.concurrent.atomic` 包）
+    - 数据库中的乐观锁通常用 **版本号（version）机制** 或时间戳。
+
+## SpringBoot
+### SpringBoot常见注解
+
+| `@SpringBootApplication` | 启动类必备     |
+| ------------------------ | --------- |
+| `@RestController`        | 声明REST控制器 |
+| `@Autowired`             | 自动注入依赖    |
+| `@Service`               | 业务逻辑层     |
+| `@Repository`            | 数据访问层     |
+| `@Component`             | 通用组件      |
+| `@Configuration`         | 配置类       |
+| `@Bean`                  | 声明一个Bean  |
+| `@Value`                 | 注入配置值     |
+| `@RequestMapping`        | 映射URL路径   |
+####  @Autowired 和 @Resource 注解
+TBC (still not fully clear)
+都是用来实现依赖注入的注解，区别如下：
+- **来源**:`@Autowired` 是Spring框架提供的注解。`@Resource` 是Java本身提供。
+- **依赖性**：使用`@Autowired` 时，通常需要依赖Spring的框架。使用`@Resource` 时，即使不在Spring框架下，也可以在任何符合Java EE规范的环境中工作。
+- **使用场景**：当你需要更细粒度的控制注入过程，或者你需要支持Spring框架之外的Java EE环境时，`@Resource` 注解可能是一个更好的选择；如果你完全在Spring的环境下工作，并且希望通过类型自动装配，`@Autowired` 是更常见的选择。
+- **属性**:`@Autowired` 可以不指定任何属性，仅通过类型自动装配。`@Resource` 可以指定一个名为`name`的属性，该属性表示要注入的bean的名称。
+- **注入方式**：`@Autowired` 默认是通过类型（byType）进行注入。如果容器中存在多个相同类型的实例，它还可以与`@Qualifier`注解一起使用，通过指定bean的id来注入特定的实例。`@Resource` 默认是通过名称（byName）进行注入。如果未指定名称，则会尝试通过类型进行匹配。
+
+✔ **用@Autowired当**：
+- 项目纯Spring环境
+- 喜欢简洁的按类型自动装配
+- 需要和其他Spring特性（如@Primary）配合使用
+
+✔ **用@Resource当**：
+- 需要兼容非Spring环境
+- 想要更精确地按名称注入
+- 项目已经有Java EE的依赖
+
 ### Bean是线程安全的吗 
 **无状态Bean**（没有成员变量或只有final变量）：安全
 **有状态Bean**（有可修改的成员变量）：不安全
@@ -1003,18 +1936,7 @@ public class OrderService {
 }
 3. **依赖注入 - Setter 方法注入：通过Setter方法设置依赖，灵活性高，但依赖可能未完全初始化。**
 ```
-### HashMap VS ConcurrentHashMap
-Source: https://xiaolincoding.com/backend_interview/internet_giants/elme.html#%E8%AE%B2%E4%B8%8Bhashmap
-**HashMap**
-HashMap 数据结构是数组和链表，HashMap通过哈希算法将元素的键（Key）映射到数组中的槽位（Bucket）。如果多个键映射到同一个槽位，它们会以链表的形式存储在同一个槽位上，所以冲突很严重，一个索引上的链表非常长，效率就很低了 - O(n)。
 
-**JDK1.8**: 当一个链表的长度超过8的时候就转换数据结构，使用**红黑树**，查找时使用红黑树，时间复杂度O（log n），可以提高查询性能，在数量较少时(<6)，会将红黑树转换回链表。
-
-- 线程不安全 - 同时往车里放商品，可能导致：数据丢失, 数据覆盖, 死循环
-
-**ConcurrentHashMap**
-使用数组加链表的形式实现
-- 虽然是线程安全的，但因为它的底层实现是数组 + 链表的形式，所以在数据比较多的情况下访问是很慢的，因为要遍历整个链表，而 JDK 1.8 则使用了数组 + 链表/红黑树的方式优化了 ConcurrentHashMap 的实现，从之前的 O(n) 优化到了 O(logn) 的时间复杂度。
 ## Database
 ### AVL VS B+ VS Red-Black Tree
 #### AVL Tree（平衡二叉搜索树）
@@ -1757,6 +2679,98 @@ Kafka特点如下：
 	- Kafka使用*零拷贝*技术，可以直接将数据从磁盘发送到网络套接字，避免了在用户空间和内核空间之间的多次数据拷贝。这大幅降低了CPU和内存的负载，提高了数据传输效率。  
 - **压缩技术**
 	- Kafka支持对消息进行压缩，*这不仅减少了网络传输的数据量，还提高了整体的吞吐量*。
+
+## Coding - 打印金字塔/钻石+测试
+```Implementation
+class ShapePrinter {
+    // 打印金字塔
+    public static void printPyramid(int n) {
+        for (int i = 1; i <= n; i++) {
+            // 打印空格
+            for (int j = 0; j < n - i; j++) { System.out.print(" "); }
+            // 打印星號
+            for (int j = 0; j < 2 * i - 1; j++) { System.out.print("*"); }
+            System.out.println();
+        }
+    }
+
+    // 打印鑽石
+    public static void printDiamond(int n) {
+        // 打印上半部分
+        for (int i = 1; i <= n; i++) {
+            for (int j = 0; j < n - i; j++) { System.out.print(" "); }
+            for (int j = 0; j < 2 * i - 1; j++) { System.out.print("*"); }
+            System.out.println();
+        }
+        
+        // 打印下半部分
+        for (int i = n - 1; i >= 1; i--) {
+            for (int j = 0; j < n - i; j++) { System.out.print(" "); }
+            for (int j = 0; j < 2 * i - 1; j++) { System.out.print("*"); }
+            System.out.println();
+        }
+    }
+}
+
+public class Main
+{
+	public static void main(String[] args) {
+		int n = 5;
+        System.out.println("金字塔:");
+        ShapePrinter.printPyramid(n);
+
+        System.out.println("\n鑽石:");
+        ShapePrinter.printDiamond(n);
+	}
+}
+
+```
+---
+```Test Case
+// IntelliJ: `src/test/java` 資料夾中建立 `ShapePrinterTest.java` -> JUnit
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class ShapePrinterTest {
+    // 測試金字塔的行數是否正確
+    @Test
+    public void testPrintPyramid() {
+        // **重定向系统输出**：
+		// 1. 创建一个 `ByteArrayOutputStream` 对象 `outContent`，用来捕获程序的输出
+        var outContent = new java.io.ByteArrayOutputStream();
+		// 2. 使用 `System.setOut` 将系统的标准输出(控制台输出)重定向到这个流中
+		PrintStream originalOut = System.out;
+        System.setOut(new java.io.PrintStream(outContent));
+
+		// 3. 调用真正要测试的方法，打印3行的金字塔。
+        ShapePrinter.printPyramid(3);
+
+		// 4. 断言：
+		// 4.1. `expectedOutput` 定义了我们期望的输出结果        
+        String expectedOutput = "  *\n ***\n*****\n";
+        // 4.2. `assertEquals` 将实际输出(`outContent.toString()`)与期望输出比较，如果不一致则测试失败
+        assertEquals(expectedOutput, outContent.toString());
+        
+        System.setOut(originalOut); // 還原
+    }
+
+    // 測試鑽石的行數是否正確
+    @Test
+    public void testPrintDiamond() {
+        // 使用System.setOut來捕獲打印輸出
+        var outContent = new java.io.ByteArrayOutputStream();
+        PrintStream originalOut = System.out;
+        System.setOut(new java.io.PrintStream(outContent));
+        
+        ShapePrinter.printDiamond(3);
+        
+        String expectedOutput = "  *\n ***\n*****\n ***\n  *\n";
+        assertEquals(expectedOutput, outContent.toString());
+        
+        System.setOut(originalOut); // 還原
+    }
+}
+```
 
 ## Test - General Concept + Case Study
 Source: https://vuejs.org/guide/scaling-up/testing.html
