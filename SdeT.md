@@ -250,7 +250,7 @@ Statement: Architected and implemented a scalable full-stack billing management 
 所以我们的目标是构建一个更高效、可扩展的新系统，提升产品信息录入、发票管理与查询的整体性能。我作为实习生，負責前端页面开发、后端接口设计与实现，以及数据库优化、自动化测试，從頭到尾（笑）。
 
 - 我使用 **Vue** **和 TypeScript** 设计并实现了关键页面的组件结构，通过优化状态管理和组件渲染逻辑，使页面加载时间减少了 **20%**；
-- 在后端，我使用 **Node.js** **与 Express** 编写和维护了多组 **RESTful API**，用于发票与产品数据的交互，并通过改进数据结构，提升数据一致性达 **30%**；
+- 在后端，我使用 **Node.js** 编写和维护了多组 **RESTful API**，用于发票与产品数据的交互，并通过改进数据结构，提升数据一致性达 **30%**；
 - 我还参与数据库重构，优化了 **SQL** **查询语句** 与索引策略，降低冗余数据 **35%**，提升了查询响应速度 **40%**，面对 **5** **万条以上**的产品数据依然能保持流畅；
 - 最后，我搭建了基于 **Docker** **的 CI/CD** **管道**，实现了 100% 的自动化单元测试与集成测试覆盖，使部署效率提高了 **50%**。
 
@@ -303,6 +303,9 @@ Statement: Architected and implemented a scalable full-stack billing management 
 
 #### 2 - (前端)优化组件渲染和状态管理/减少页面加载时间
 Statement: Revamped invoice dashboards using Vue.js, achieving a **20%** reduction in page load time by optimizing component rendering and state management, which enhanced user engagement by **15%**
+
+- 我使用 **Vue** **和 TypeScript** 设计并实现了关键页面的组件结构，通过优化状态管理和组件渲染逻辑，使页面加载时间减少了 **20%**；
+
 ##### 綜述
 我做了几个前端方面的优化：
 
@@ -386,6 +389,8 @@ export default {
 
 #### 3 - (后端)REST API/优化数据交换/数据一致性
 Statement: Developed and maintained **RESTful APIs**, optimizing data exchange between financial services, resulting in a **25% reduction** in transaction processing time and improving data consistency by **30%**
+
+- 在后端，我使用 **Node.js** 编写和维护了多组 **RESTful API**，用于发票与产品数据的交互，并通过改进数据结构，减少交易处理时间，提升数据一致性达 **30%**；
 
 **API设计与测试**：用Swagger记录所有端点，Vitest单元测试，Jest/knex.js集成测试 - 使用测试数据库验证从API调用到查询执行再返回的整个流程（例如，发票編輯→更新）。
 
@@ -496,6 +501,8 @@ app.post('/api/transaction', async (req, res) => {
 
 #### 4 - (DB)数据库重构/减少数据冗余/查询响应时间
 Statement: Optimized **SQL** queries and restructured the database schema for the invoice management system, reducing data redundancy by **35%**, cutting query response time by **40%** and boosting invoice retrieval efficiency across **50,000+** products
+
+- 我还参与数据库重构，优化了 **SQL** **查询语句** 与索引策略，降低冗余数据 **35%**，提升了查询响应速度 **40%**，面对 **5** **万条以上**的产品数据依然能保持流畅；
 
 **DB: MySQL -> PostgreSQL**
 - MySQL适合快速开发和高并发应用；PostgreSQL更适合需要稳定性和高级特性的企业应用程序。
@@ -650,6 +657,8 @@ SHOW PROFILES;
 ```
 #### 5 - (部署)Docker/CI-CD管道/缩短部署时间/100%自动化测试覆盖
 Statement: Created and deployed **CI/CD** pipelines using Docker, slashing deployment time by **50%** and ensuring 100% continuous integration and automated testing coverage 
+
+- 最后，我搭建了基于 **Docker** **的 CI/CD** **管道**，实现了 100% 的自动化单元测试与集成测试覆盖，使部署效率提高了 **50%**。
 
 **CI/CD 管道和测试流程：**
 - 使用ESLint/Prettier 进行代码质量检查
