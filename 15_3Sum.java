@@ -7,28 +7,34 @@
 class Solution {
     public List<List<Integer>> threeSum(int[] nums) {
         List<List<Integer>> res = new ArrayList<>();
+        // the order of the output not matter
         Arrays.sort(nums);
-        
-        // 1st digit - for loop; have to be negative || zero
-        for (int i = 0; i < nums.length && nums[i] <= 0; i++) {
-            // avoid duplicates
+
+        for (int i = 0; i < nums.length-2; i++) {
+            // edge case for optimization: the 3 smallest digits in the cur range > 0 -> break
+            if (nums[i] + nums[i+1] + nums[i+2] > 0) break;
+            // edge case for optimization: the cur + 2 largest digits < 0 -> continue
+            if (nums[i] + nums[nums.length-2] + nums[nums.length-1] < 0) continue;
+
+            // avoid repetition for the first digit
             if (i > 0 && nums[i] == nums[i-1]) continue;
 
-            // 2nd & 3rd digit - two-pointer: [1st+1, the last]
-            int l = i+1, r = nums.length-1;
-            while (l < r) {
-                int tmp = nums[i] + nums[l] + nums[r];
-                if (tmp > 0) r--;
-                else if (tmp < 0) l++;
+            int left = i+1, right = nums.length-1;
+            while (left < right) {
+                int tmp = nums[left] + nums[right];
+
+                if (tmp < (0 - nums[i])) left++;
+                else if (tmp > (0 - nums[i])) right--;
                 else {
-                    res.add(Arrays.asList(nums[i], nums[l], nums[r]));
-                    // update l & r while avoid duplicate values
-                    l++;
-                    r--;
-                    while (l < r && nums[l] == nums[l-1]) l++;
+                    res.add(Arrays.asList(nums[i], nums[left], nums[right]));
+                    left++;
+                    right--;
+                    // avoid repetition
+                    while (left < right && nums[left] == nums[left-1]) left++;
                 }
             }
         }
+
         return res;
     }
 }
