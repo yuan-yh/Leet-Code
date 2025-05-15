@@ -1,26 +1,30 @@
 // Time complexity: O(n)
 // Space complexity: O(1)
 
+// trap water based on the lower wall
+// 1. calculate trapped water
+// 2. update pointer
+// 3. update wall height
+
 class Solution {
     public int trap(int[] height) {
-        if (height.length <= 2) return 0;
+        if (height.length < 2) return 0;
+        
+        int left = 0, right = height.length - 1, res = 0; 
+        int lWall = height[left], rWall = height[right];
 
-        int res = 0, l = 0, r = height.length - 1;
-        int lMax = height[l], rMax = height[r];
-        while (l < r) {
-            // trap water based on the lower wall
-            // 1. calculate trapped water
-            // 2. update pointer
-            // 3. update wall height
-            if (lMax < rMax) {
-                res += (lMax - height[l]);
-                l++;
-                lMax = Math.max(lMax, height[l]);
+        while (left < right) {
+            // 1. shift left wall
+            if (lWall < rWall) {
+                res += (lWall - height[left]);
+                left ++;
+                lWall = Math.max(lWall, height[left]);
             }
+            // 2. shift right wall
             else {
-                res += (rMax - height[r]);
-                r--;
-                rMax = Math.max(rMax, height[r]);
+                res += (rWall - height[right]);
+                right --;
+                rWall = Math.max(rWall, height[right]);
             }
         }
         return res;
