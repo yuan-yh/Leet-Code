@@ -1,3 +1,4 @@
+## Amazon Summer Intern
 Given the input binary tree find the mirror image of the given tree, and do it in place?
 
 
@@ -93,3 +94,41 @@ class Solution {
         return min;
     }
 }
+
+## TikTok Summer Intern
+### vo 1
+25min resume (work experience *metric calculation)
+
+15min LC14: https://leetcode.com/problems/longest-common-prefix/description/
+
+ArrayList和LinkedList
+静态变量和实例变量
+final, finally 和 finalize 的区别
+死锁以及如何避免
+单例模式 (Singleton) + coding sample
+
+### vo 2
+30min resume (2 projects - *sql分表 & test coverage)
+
+Java反射
+依赖倒置 / 控制反转 / 依赖注入
+Python装饰器
+
+Coding: 写一个计算并打印函数执行时间的装饰器
+Coding: 打印钻石, 描述test case
+Coding: SQL - 成绩表（挑出所有没有挂科的学生的信息）
+    ```
+    题目描述如下：
+
+    表名：student_profile
+
+    字段：id, name, sex, discipline, grade
+
+    示例数据：
+    1,zhangsan,male,Chinese,30
+    1,zhangsan,male,Math,60
+    2,lisi,male,Chinese,70
+    2,lisi,male,Math,80
+    要求： 挑出所有没有挂科的学生的信息。
+    （挂科通常是指成绩低于 
+    ```
