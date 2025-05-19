@@ -1,3 +1,6 @@
+// Time complexity: O(nlog(n))
+// Space complexity: O(1)
+
 class Solution {
     public int[] searchRange(int[] nums, int target) {
         int[] res = new int[]{-1, -1};
