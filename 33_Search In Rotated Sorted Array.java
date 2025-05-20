@@ -5,28 +5,27 @@
 class Solution {
     public int search(int[] nums, int target) {
         int left = 0, right = nums.length - 1;
-        while (left <= right) {
-            int middle = (right - left) / 2 + left;
 
-            if (nums[middle] == target) return middle;
-            // left - middle sorted, possible right rotated
-            if (nums[left] <= nums[middle]) {
-                if (nums[left] <= target && target < nums[middle]) {
-                    right = middle - 1;
-                } else {
-                    left = middle + 1;
-                }
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+
+            // case: find the target
+            if (nums[mid] == target) return mid;
+
+            // [mid, right] sorted
+            if (nums[mid] < nums[right]) {
+                // check if target in [mid, right]
+                if (nums[mid] < target && target <= nums[right]) left = mid + 1;
+                else right = mid - 1;
             }
-            // left - middle rotated, right sorted
+            // [left, mid] sorted
             else {
-                if (nums[middle] < target && target <= nums[right]) {
-                    left = middle + 1;
-                }
-                else {
-                    right = middle - 1;
-                }
+                // check if target in [left, mid]
+                if (nums[left] <= target && target < nums[mid]) right = mid - 1;
+                else left = mid + 1;
             }
         }
+
         return -1;
     }
 }
