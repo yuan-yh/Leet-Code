@@ -31,20 +31,15 @@ class Solution {
         return res;
     }
 
-    private TreeNode dfs(TreeNode node, Set<Integer> toDel, List<TreeNode> res) {
-        if (node == null) return null;
+    private TreeNode dfs(TreeNode node, Set<Integer> del, List<TreeNode> res) {
+        if (node == null) return node;
 
-        TreeNode left = dfs(node.left, toDel, res);
-        TreeNode right = dfs(node.right, toDel, res);
+        node.left = dfs(node.left, del, res);
+        node.right = dfs(node.right, del, res);
 
-        if (toDel.contains(node.val)) {
-            if (left != null) res.add(left);
-            if (right != null) res.add(right);
-            return null;
-        } else {
-            node.left = left;
-            node.right = right;
-            return node;
-        }
+        if (!del.contains(node.val)) return node;
+        if (node.left != null) res.add(node.left);
+        if (node.right != null) res.add(node.right);
+        return null;
     }
 }
