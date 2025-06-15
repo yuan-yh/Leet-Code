@@ -14,23 +14,27 @@
  * }
  */
 class Solution {
-    private int res = Integer.MAX_VALUE;
-
     public int minDepth(TreeNode root) {
-        depthHelper(root, 0);
-        return (root == null) ? 0 : res;
-    }
+        if (root == null) return 0;
+        int res = 0, cur = 0, size;
+        Queue<TreeNode> q = new LinkedList<>();
+        q.add(root);
 
-    private void depthHelper(TreeNode node, int curDepth) {
-        // end case: empty node
-        if (node == null) return;
-        // end case: leaf node
-        if (node.left == null && node.right == null) {
-            res = Math.min(res, curDepth + 1);
-            return;
+        while (!q.isEmpty()) {
+            cur ++;
+            size = q.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode n = q.poll();
+                if (n.left == null && n.right == null) {
+                    res = cur;
+                    break;
+                }
+                if (n.left != null) q.add(n.left);
+                if (n.right != null) q.add(n.right);
+            }
+            if (res != 0) break;
         }
-        // process
-        depthHelper(node.left, curDepth + 1);
-        depthHelper(node.right, curDepth + 1);
+
+        return res;
     }
 }
