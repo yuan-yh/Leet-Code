@@ -1,29 +1,31 @@
 // Time Complexity: O(n * 2^n)
 // Space Complexity: O(n)
 
-// Method 1
+// Essentially it traverses through each leaf of a binary tree, in which at each node is two choices: add the cur digit or not
+// Therefore, we choose a branch, then backtrack the choice and turn to a different branch
+
 class Solution {
     List<List<Integer>> res = new ArrayList<>();
     List<Integer> cur = new ArrayList<>();
+    int[] nums;
 
     public List<List<Integer>> subsets(int[] nums) {
-        bt(nums, 0);        
+        this.nums = nums;
+        bt(0);
         return res;
     }
 
-    private void bt(int[] nums, int start) {
+    private void bt(int start) {
         // end case
         if (start == nums.length) {
             res.add(new ArrayList<>(cur));
             return;
         }
-
-        // case 1: not add cur digit
-        bt(nums, start + 1);
-
-        // case 2: add cur digit
+        // process
         cur.add(nums[start]);
-        bt(nums, start + 1);
+        bt(start + 1);
+        // backtrack
         cur.remove(cur.size() - 1);
+        bt(start + 1);
     }
 }
