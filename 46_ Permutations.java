@@ -12,6 +12,7 @@ class Solution {
     }
 
     private void backtrack(int[] nums, int index) {
+        // all digits in the nums array before 'index' have been added into the current path
         // end case: complete the re-arrangment of nums
         if (index == nums.length) {
             List<Integer> list = new ArrayList<>();
