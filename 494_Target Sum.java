@@ -1,3 +1,6 @@
+// 时间复杂度：O(nm)，其中 n 为 nums 的长度，m 为 nums 的元素和减去 ∣target∣。
+// 空间复杂度：O(m)
+
 class Solution {
     public int findTargetSumWays(int[] nums, int target) {
         // Method 1 (slow): binary tree - each branch is eith + or -
