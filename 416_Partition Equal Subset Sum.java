@@ -1,3 +1,6 @@
+// 时间复杂度：O(ns)，其中 n 是 nums 的长度，s 是 nums 的元素和（的一半）。
+// 空间复杂度：O(s)
+
 class Solution {
     public boolean canPartition(int[] nums) {
         int target = 0;
