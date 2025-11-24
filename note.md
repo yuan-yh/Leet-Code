@@ -1829,15 +1829,672 @@ if __name__ == "__main__":
 
 ## 换一个元素->最长非递减子数组的长度
 ```code
+class Solution:
+    def longestSubarray(self, nums: List[int]) -> int:
+        n = len(nums)
+        if n == 1:
+            return 1
 
+        suf = [0] * n
+        suf[-1] = 1
+        ans = 2
+        for i in range(n - 2, 0, -1):
+            if nums[i] <= nums[i + 1]:
+                suf[i] = suf[i + 1] + 1
+                ans = max(ans, suf[i] + 1)  # 把 nums[i-1] 拼在 suf[i] 前面
+            else:
+                suf[i] = 1
+
+        pre = 1
+        for i in range(1, n - 1):
+            if nums[i - 1] <= nums[i + 1]:
+                ans = max(ans, pre + 1 + suf[i + 1])  # 替换 nums[i]
+            if nums[i - 1] <= nums[i]:
+                pre += 1
+                ans = max(ans, pre + 1)  # 把 nums[i+1] 拼在 pre 后面
+            else:
+                pre = 1
+        return ans
 ```
 
-## TD
-```code
+## Median
+在两个有序数组中，查找第 k 小的数，其中 k=(m+n)/2
 
+如果 m+n 是奇数，返回第 k 小的数。
+如果 m+n 是偶数，返回第 k 小的数和第 k+1 小的数的平均值。
+```code
+class Solution:
+    def findMedianSortedArrays(self, a: List[int], b: List[int]) -> float:
+        if len(a) > len(b):
+            a, b = b, a
+
+        m, n = len(a), len(b)
+        a = [-inf] + a + [inf]
+        b = [-inf] + b + [inf]
+
+        # 循环不变量：a[left] <= b[j+1]
+        # 循环不变量：a[right] > b[j+1]
+        left, right = 0, m + 1
+        while left + 1 < right:  # 开区间 (left, right) 不为空
+            i = (left + right) // 2
+            j = (m + n + 1) // 2 - i
+            if a[i] <= b[j + 1]:
+                left = i  # 缩小二分区间为 (i, right)
+            else:
+                right = i  # 缩小二分区间为 (left, i)
+
+        # 此时 left 等于 right-1
+        # a[left] <= b[j+1] 且 a[right] > b[j'+1] = b[j]，所以答案是 i=left
+        i = left
+        j = (m + n + 1) // 2 - i
+        max1 = max(a[i], b[j])
+        min2 = min(a[i + 1], b[j + 1])
+        return max1 if (m + n) % 2 else (max1 + min2) / 2
 ```
 
-## TD
+## MedianFinder
 ```code
+class MedianFinder:
+    def __init__(self):
+        self.left = []  # 入堆的元素取相反数，变成最大堆
+        self.right = []  # 最小堆
 
+    def addNum(self, num: int) -> None:
+        if len(self.left) == len(self.right):
+            heappush(self.left, -heappushpop(self.right, num))
+        else:
+            heappush(self.right, -heappushpop(self.left, -num))
+
+    def findMedian(self) -> float:
+        if len(self.left) > len(self.right):
+            return -self.left[0]
+        return (self.right[0] - self.left[0]) / 2
+```
+
+## 最小旅行成本
+```code
+from collections import defaultdict, deque
+from typing import List, Dict, Tuple, Optional
+import heapq
+import sys
+
+class CityTravelOptimizer:
+    def __init__(self):
+        self.graph = defaultdict(dict)
+        self.cities = set()
+    
+    def addConnection(self, city1: str, city2: str, cost: int):
+        """添加城市间的连接和成本"""
+        self.graph[city1][city2] = cost
+        self.graph[city2][city1] = cost
+        self.cities.add(city1)
+        self.cities.add(city2)
+    
+    def findLeastCostStartCity(self, connections: List[List]) -> Tuple[str, int]:
+        """
+        找到作为起点成本最小的城市
+        
+        Args:
+            connections: [[city1, city2, cost], ...]
+            
+        Returns:
+            (最佳起始城市, 最小成本)
+        """
+        # 构建图
+        for city1, city2, cost in connections:
+            self.addConnection(city1, city2, cost)
+        
+        min_cost = float('inf')
+        best_start_city = None
+        
+        # 尝试从每个城市出发
+        for start_city in self.cities:
+            # 计算从该城市出发遍历所有城市的成本
+            cost = self.calculateTravelCost(start_city)
+            
+            if cost < min_cost:
+                min_cost = cost
+                best_start_city = start_city
+        
+        return best_start_city, min_cost
+    
+    def calculateTravelCost(self, start_city: str) -> int:
+        """
+        计算从指定城市出发遍历所有城市并返回的最小成本
+        使用动态规划解决TSP问题
+        """
+        cities_list = list(self.cities)
+        n = len(cities_list)
+        city_index = {city: i for i, city in enumerate(cities_list)}
+        
+        # 如果城市数量较少，使用精确的DP解法
+        if n <= 15:
+            return self.tsp_dp(start_city, city_index, cities_list)
+        else:
+            # 城市数量较多时使用近似算法
+            return self.tsp_greedy(start_city)
+    
+    def tsp_dp(self, start_city: str, city_index: dict, cities_list: list) -> int:
+        """
+        使用动态规划精确求解TSP
+        状态：dp[mask][i] = 从起点出发，访问了mask中的城市，当前在城市i的最小成本
+        """
+        n = len(cities_list)
+        start_idx = city_index[start_city]
+        
+        # dp[mask][i] = 访问了mask表示的城市集合，当前在城市i的最小成本
+        dp = [[float('inf')] * n for _ in range(1 << n)]
+        
+        # 初始状态：只访问起始城市
+        dp[1 << start_idx][start_idx] = 0
+        
+        # 遍历所有可能的状态
+        for mask in range(1 << n):
+            for u in range(n):
+                if dp[mask][u] == float('inf'):
+                    continue
+                
+                # 尝试访问下一个未访问的城市
+                for v in range(n):
+                    if mask & (1 << v):  # 已访问
+                        continue
+                    
+                    city_u = cities_list[u]
+                    city_v = cities_list[v]
+                    
+                    if city_v in self.graph[city_u]:
+                        new_mask = mask | (1 << v)
+                        new_cost = dp[mask][u] + self.graph[city_u][city_v]
+                        dp[new_mask][v] = min(dp[new_mask][v], new_cost)
+        
+        # 计算返回起点的成本
+        full_mask = (1 << n) - 1
+        min_cost = float('inf')
+        
+        for i in range(n):
+            if i == start_idx:
+                continue
+            city_i = cities_list[i]
+            if start_city in self.graph[city_i]:
+                total_cost = dp[full_mask][i] + self.graph[city_i][start_city]
+                min_cost = min(min_cost, total_cost)
+        
+        return min_cost
+    
+    def tsp_greedy(self, start_city: str) -> int:
+        """
+        使用贪心算法（最近邻居）近似求解TSP
+        适用于城市数量较多的情况
+        """
+        visited = {start_city}
+        current = start_city
+        total_cost = 0
+        
+        while len(visited) < len(self.cities):
+            # 找到最近的未访问城市
+            min_dist = float('inf')
+            next_city = None
+            
+            for neighbor, cost in self.graph[current].items():
+                if neighbor not in visited and cost < min_dist:
+                    min_dist = cost
+                    next_city = neighbor
+            
+            if next_city:
+                total_cost += min_dist
+                visited.add(next_city)
+                current = next_city
+            else:
+                break
+        
+        # 返回起点
+        if start_city in self.graph[current]:
+            total_cost += self.graph[current][start_city]
+        
+        return total_cost
+    
+    def convertToTree(self, root: str) -> Dict:
+        """
+        将图转换为树结构（使用BFS生成树）
+        
+        Returns:
+            树的邻接表表示
+        """
+        tree = defaultdict(list)
+        visited = {root}
+        queue = deque([root])
+        
+        while queue:
+            node = queue.popleft()
+            
+            for neighbor in self.graph[node]:
+                if neighbor not in visited:
+                    visited.add(neighbor)
+                    tree[node].append(neighbor)
+                    queue.append(neighbor)
+        
+        return dict(tree)
+    
+    def convertToMinSpanningTree(self) -> Dict:
+        """
+        将图转换为最小生成树（使用Kruskal算法）
+        """
+        # 收集所有边
+        edges = []
+        seen = set()
+        
+        for city1 in self.graph:
+            for city2, cost in self.graph[city1].items():
+                edge = tuple(sorted([city1, city2]))
+                if edge not in seen:
+                    edges.append((cost, city1, city2))
+                    seen.add(edge)
+        
+        # 按成本排序
+        edges.sort()
+        
+        # 并查集
+        parent = {city: city for city in self.cities}
+        
+        def find(x):
+            if parent[x] != x:
+                parent[x] = find(parent[x])
+            return parent[x]
+        
+        def union(x, y):
+            px, py = find(x), find(y)
+            if px != py:
+                parent[px] = py
+                return True
+            return False
+        
+        # 构建最小生成树
+        tree = defaultdict(list)
+        total_cost = 0
+        
+        for cost, city1, city2 in edges:
+            if union(city1, city2):
+                tree[city1].append((city2, cost))
+                tree[city2].append((city1, cost))
+                total_cost += cost
+        
+        return dict(tree), total_cost
+
+
+# 简化版解决方案（针对面试）
+class SimpleCityTravel:
+    def findBestStartCity(self, connections: List[List]) -> Tuple[str, int]:
+        """
+        简化版：找到最优起始城市
+        
+        Args:
+            connections: [["A", "B", 10], ["B", "C", 20], ...]
+        
+        Returns:
+            (最佳起始城市, 最小成本)
+        """
+        # 构建图
+        graph = defaultdict(dict)
+        cities = set()
+        
+        for city1, city2, cost in connections:
+            graph[city1][city2] = cost
+            graph[city2][city1] = cost
+            cities.add(city1)
+            cities.add(city2)
+        
+        def dijkstra(start):
+            """从start出发到所有其他城市的最短路径"""
+            distances = {city: float('inf') for city in cities}
+            distances[start] = 0
+            visited = set()
+            heap = [(0, start)]
+            
+            while heap:
+                curr_dist, curr_city = heapq.heappop(heap)
+                
+                if curr_city in visited:
+                    continue
+                
+                visited.add(curr_city)
+                
+                for neighbor, cost in graph[curr_city].items():
+                    new_dist = curr_dist + cost
+                    if new_dist < distances[neighbor]:
+                        distances[neighbor] = new_dist
+                        heapq.heappush(heap, (new_dist, neighbor))
+            
+            return distances
+        
+        # 计算每个城市作为起点的总成本
+        min_total_cost = float('inf')
+        best_city = None
+        
+        for start_city in cities:
+            # 获取从该城市到所有其他城市的最短距离
+            distances = dijkstra(start_city)
+            
+            # 计算访问所有城市的总成本（简化：使用最短路径之和）
+            total_cost = sum(distances.values())
+            
+            if total_cost < min_total_cost:
+                min_total_cost = total_cost
+                best_city = start_city
+        
+        return best_city, min_total_cost
+
+
+def test_solution():
+    """测试函数"""
+    print("=== 城市旅行成本优化测试 ===\n")
+    
+    # 测试用例1：简单三角形
+    print("测试1：三城市三角形")
+    optimizer = CityTravelOptimizer()
+    connections1 = [
+        ["A", "B", 10],
+        ["B", "C", 20],
+        ["A", "C", 15]
+    ]
+    
+    best_city, min_cost = optimizer.findLeastCostStartCity(connections1)
+    print(f"连接: {connections1}")
+    print(f"最佳起始城市: {best_city}")
+    print(f"最小成本: {min_cost}")
+    
+    # 转换为树
+    tree = optimizer.convertToTree(best_city)
+    print(f"树结构: {tree}\n")
+    
+    # 测试用例2：四城市网络
+    print("测试2：四城市完全图")
+    optimizer2 = CityTravelOptimizer()
+    connections2 = [
+        ["北京", "上海", 100],
+        ["北京", "广州", 150],
+        ["北京", "深圳", 200],
+        ["上海", "广州", 120],
+        ["上海", "深圳", 130],
+        ["广州", "深圳", 50]
+    ]
+    
+    best_city2, min_cost2 = optimizer2.findLeastCostStartCity(connections2)
+    print(f"最佳起始城市: {best_city2}")
+    print(f"最小旅行成本: {min_cost2}")
+    
+    # 最小生成树
+    mst, mst_cost = optimizer2.convertToMinSpanningTree()
+    print(f"最小生成树总成本: {mst_cost}")
+    print(f"树结构: {dict(mst)}\n")
+    
+    # 测试简化版
+    print("测试3：简化版算法")
+    simple = SimpleCityTravel()
+    best_city3, cost3 = simple.findBestStartCity(connections2)
+    print(f"最佳起始城市（简化）: {best_city3}")
+    print(f"成本估算: {cost3}")
+
+
+if __name__ == "__main__":
+    test_solution()
+```
+
+## Highway Checkpoint
+```code
+from collections import defaultdict
+import re
+from typing import List
+
+class TollCalculator:
+    def calculateTolls(self, logs: List[str]) -> List[str]:
+        """
+        计算每辆车的总过路费
+        
+        Args:
+            logs: 日志列表，格式为 "车牌,收费站,时间戳"
+            
+        Returns:
+            格式化的费用列表 ["License: 车牌, Fee: 费用"]
+        """
+        # Step 1: 解析日志并按车牌分组
+        vehicle_logs = defaultdict(list)
+        
+        for log in logs:
+            # 解析日志条目
+            parts = log.split(',')
+            license_plate = parts[0]
+            checkpoint = parts[1]
+            timestamp = int(parts[2])
+            
+            # 提取收费站位置（数字部分）
+            position = self.extractPosition(checkpoint)
+            
+            # 记录：(时间戳, 位置, 收费站名称)
+            vehicle_logs[license_plate].append((timestamp, position, checkpoint))
+        
+        # Step 2: 计算每辆车的费用
+        results = []
+        
+        for license_plate, checkpoint_records in vehicle_logs.items():
+            # 按时间戳排序
+            checkpoint_records.sort(key=lambda x: x[0])
+            
+            # 计算总费用
+            total_fee = 0
+            for i in range(1, len(checkpoint_records)):
+                prev_position = checkpoint_records[i-1][1]
+                curr_position = checkpoint_records[i][1]
+                
+                # 费用 = |位置差| × 10
+                fee = abs(curr_position - prev_position) * 10
+                total_fee += fee
+            
+            # 格式化结果
+            results.append(f"License: {license_plate}, Fee: {total_fee}")
+        
+        return results
+    
+    def extractPosition(self, checkpoint: str) -> int:
+        """
+        从收费站名称中提取位置数字
+        
+        Args:
+            checkpoint: 收费站名称（如 "A5", "D10"）
+            
+        Returns:
+            位置数字
+        """
+        # 使用正则表达式提取数字
+        match = re.search(r'\d+', checkpoint)
+        if match:
+            return int(match.group())
+        return 0
+    
+    def calculateTollsWithDetails(self, logs: List[str]) -> dict:
+        """
+        计算费用并返回详细信息
+        
+        Returns:
+            包含详细路线和费用信息的字典
+        """
+        vehicle_logs = defaultdict(list)
+        
+        # 解析日志
+        for log in logs:
+            parts = log.split(',')
+            license_plate = parts[0]
+            checkpoint = parts[1]
+            timestamp = int(parts[2])
+            position = self.extractPosition(checkpoint)
+            
+            vehicle_logs[license_plate].append({
+                'timestamp': timestamp,
+                'position': position,
+                'checkpoint': checkpoint
+            })
+        
+        # 计算详细费用
+        detailed_results = {}
+        
+        for license_plate, records in vehicle_logs.items():
+            # 按时间排序
+            records.sort(key=lambda x: x['timestamp'])
+            
+            route = []
+            segments = []
+            total_fee = 0
+            
+            for i in range(len(records)):
+                route.append(f"{records[i]['checkpoint']}({records[i]['position']})")
+                
+                if i > 0:
+                    prev = records[i-1]
+                    curr = records[i]
+                    
+                    distance = abs(curr['position'] - prev['position'])
+                    fee = distance * 10
+                    
+                    segments.append({
+                        'from': prev['checkpoint'],
+                        'to': curr['checkpoint'],
+                        'distance': distance,
+                        'fee': fee
+                    })
+                    
+                    total_fee += fee
+            
+            detailed_results[license_plate] = {
+                'route': ' → '.join(route),
+                'segments': segments,
+                'total_fee': total_fee
+            }
+        
+        return detailed_results
+
+
+def test_toll_calculator():
+    """测试函数"""
+    calculator = TollCalculator()
+    
+    # 测试用例1
+    print("=== 测试用例1 ===")
+    logs1 = ["CAR123,A1,1000", "CAR123,A5,2000"]
+    result1 = calculator.calculateTolls(logs1)
+    print(f"输入: {logs1}")
+    print(f"输出: {result1}")
+    print(f"解释: A1(位置1) → A5(位置5), 费用 = |5-1|×10 = 40")
+    
+    # 测试用例2
+    print("\n=== 测试用例2 ===")
+    logs2 = [
+        "CAR111,C2,1100", 
+        "CAR111,C4,1300", 
+        "CAR222,C1,1000", 
+        "CAR222,C3,1500", 
+        "CAR222,C7,2000"
+    ]
+    result2 = calculator.calculateTolls(logs2)
+    details2 = calculator.calculateTollsWithDetails(logs2)
+    
+    print(f"输入: {logs2}")
+    print(f"输出: {result2}")
+    print("\n详细信息:")
+    for license, info in details2.items():
+        print(f"\n{license}:")
+        print(f"  路线: {info['route']}")
+        for segment in info['segments']:
+            print(f"  - {segment['from']} → {segment['to']}: "
+                  f"距离={segment['distance']}, 费用={segment['fee']}")
+        print(f"  总费用: {info['total_fee']}")
+    
+    # 测试用例3：时间戳不按顺序
+    print("\n=== 测试用例3 ===")
+    logs3 = [
+        "CAR999,D10,3000", 
+        "CAR999,D1,1000", 
+        "CAR999,D5,2000"
+    ]
+    result3 = calculator.calculateTolls(logs3)
+    details3 = calculator.calculateTollsWithDetails(logs3)
+    
+    print(f"输入: {logs3}")
+    print(f"输出: {result3}")
+    print(f"\n按时间排序后的路线: {details3['CAR999']['route']}")
+    print(f"费用计算:")
+    for segment in details3['CAR999']['segments']:
+        print(f"  {segment['from']} → {segment['to']}: {segment['fee']}")
+    print(f"总费用: {details3['CAR999']['total_fee']}")
+    
+    # 测试用例4：复杂场景
+    print("\n=== 测试用例4：复杂场景 ===")
+    logs4 = [
+        "CAR001,A1,1000",
+        "CAR001,A10,2000",
+        "CAR001,A5,3000",
+        "CAR001,A8,4000",
+        "CAR002,B20,1500",
+        "CAR002,B5,2500",
+        "CAR002,B15,3500"
+    ]
+    result4 = calculator.calculateTolls(logs4)
+    details4 = calculator.calculateTollsWithDetails(logs4)
+    
+    print(f"输入: {logs4}")
+    print(f"输出: {result4}")
+    print("\n详细路线:")
+    for license, info in details4.items():
+        print(f"\n{license}: {info['route']}")
+        print(f"  总费用: {info['total_fee']}")
+    
+    # 边界情况测试
+    print("\n=== 边界情况测试 ===")
+    
+    # 同一位置
+    logs5 = ["CAR555,X5,1000", "CAR555,Y5,2000"]
+    result5 = calculator.calculateTolls(logs5)
+    print(f"同一位置测试: {logs5}")
+    print(f"结果: {result5} (费用应为0)")
+    
+    # 大位置数字
+    logs6 = ["CAR666,Z100,1000", "CAR666,Z1,2000"]
+    result6 = calculator.calculateTolls(logs6)
+    print(f"\n大数字测试: {logs6}")
+    print(f"结果: {result6} (费用 = |100-1|×10 = 990)")
+
+
+# 优化版本：支持批量处理
+class OptimizedTollCalculator:
+    def calculateTolls(self, logs: List[str]) -> List[str]:
+        """优化版本，减少内存使用"""
+        # 使用单次遍历完成解析和分组
+        vehicle_data = {}
+        
+        for log in logs:
+            license, checkpoint, timestamp = log.split(',')
+            position = int(''.join(filter(str.isdigit, checkpoint)))
+            
+            if license not in vehicle_data:
+                vehicle_data[license] = []
+            
+            vehicle_data[license].append((int(timestamp), position))
+        
+        results = []
+        
+        for license, checkpoints in vehicle_data.items():
+            # 原地排序
+            checkpoints.sort()
+            
+            # 计算费用
+            total_fee = sum(
+                abs(checkpoints[i][1] - checkpoints[i-1][1]) * 10
+                for i in range(1, len(checkpoints))
+            )
+            
+            results.append(f"License: {license}, Fee: {total_fee}")
+        
+        return results
+
+
+if __name__ == "__main__":
+    test_toll_calculator()
 ```
