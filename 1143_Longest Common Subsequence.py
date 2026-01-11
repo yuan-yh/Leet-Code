@@ -1,11 +1,13 @@
 # 1D DP Optimization
 class Solution:
     def longestCommonSubsequence(self, text1: str, text2: str) -> int:
-        if len(text1) > len(text2): text1, text2 = text2, text1  # assign text1 the shorter string
+        # 1. assign text1 the shorter string
+        if len(text1) > len(text2): text1, text2 = text2, text1
+        # 2. dp[i] - max LCS for text1[:i] inclusively and text2[:j] inclusively during the loop
         dp = [0] * len(text1)
 
-        for t2 in text2:
-            prev = 0    # equivalent to dp[i-1][j-1] diagonal
+        for j, t2 in enumerate(text2):
+            prev = 0 # diagonal dp[i-1][j-1]
             for i, t1 in enumerate(text1):
                 tmp = dp[i]
                 if t1 == t2: dp[i] = prev + 1

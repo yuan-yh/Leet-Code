@@ -1,20 +1,22 @@
 # Greedy + Binary Search: O(n log n)
 class Solution:
     def lengthOfLIS(self, nums: List[int]) -> int:
-        minEnd = [nums[0]]  # minEnd[i] is the min end digit for the increasing subsequence w/ length i+1
+        # dp[i]: the min end of LIS w/ size i+1, must be sorted so we can use Binary Search
+        dp = []
 
-        for n in nums[1:]:
-            # for max j such that minEnd[j] >= n -> replace w/ n or expand the subsequence by appending n
-            # Therefore, binary search (start, end]
-            l, r = -1, len(minEnd)
+        for n in nums:
+            # n > all dp[i]: append to build a longer LIS
+            # n <= dp[i]: replace w/ n
+            l, r = -1, len(dp)      # (start, end]
             while l + 1 < r:
                 m = (l + r) >> 1
-                if minEnd[m] >= n: r = m
-                else: l = m
+                if dp[m] < n: l = m
+                else: r = m
             
-            if r == len(minEnd): minEnd.append(n)
-            else: minEnd[r] = n
-        return len(minEnd)
+            if r == len(dp): dp.append(n)
+            else: dp[r] = n
+
+        return len(dp)
 
 # # Heap: O(n^2)
 # class Solution:
