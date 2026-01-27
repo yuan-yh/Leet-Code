@@ -1,7 +1,9 @@
 class Solution:
     def minCostClimbingStairs(self, cost: List[int]) -> int:
-        dp = [0, 0]
+        curs = nexts = 0
         for c in cost:
-            tmp = dp[0] + c
-            dp[0], dp[1] = min(dp[1], tmp), tmp
-        return dp[0]
+            # cost for the next 2 steps from here = curs + c
+            # cost for the next step = min(nexts, curs + c)
+            # cost for the next next step = curs + c
+            curs, nexts = min(nexts, curs + c), curs + c
+        return curs
