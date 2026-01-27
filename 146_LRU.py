@@ -3,11 +3,11 @@ class Node:
     def __init__(self, key=0, val=0):
         self.key = key
         self.val = val
-        
+
 class LRUCache:
     def __init__(self, capacity: int):
         self.capacity = capacity
-        self.record = {}
+        self.record = {}            # key: node.key, val: node
         self.head = Node()
         self.tail = Node()
         self.head.next = self.tail
@@ -17,14 +17,14 @@ class LRUCache:
         pnode, nnode = node.prev, node.next
         pnode.next = nnode
         nnode.prev = pnode
-
+    
     def insert(self, node):
         phead = self.head.next
         self.head.next = node
         node.prev = self.head
         node.next = phead
         phead.prev = node
-
+    
     def get(self, key: int) -> int:
         if key not in self.record: return -1
         target = self.record[key]
@@ -37,11 +37,12 @@ class LRUCache:
             target = self.record[key]
             target.val = value
             self.delete(target)
-        else:
+        else: 
             target = Node(key, value)
             self.record[key] = target
-        self.insert(target)
         
+        self.insert(target)
+
         if len(self.record) > self.capacity:
             expire = self.tail.prev
             self.delete(expire)
