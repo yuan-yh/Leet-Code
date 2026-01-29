@@ -1,16 +1,10 @@
 class Solution:
     def twoSum(self, nums: List[int], target: int) -> List[int]:
-        def search(start, end, goal) -> int:
-            # [start, end]
-            while start <= end:
-                m = (start + end) >> 1
-                if nums[m] == goal: return m
-                elif nums[m] < goal: start = m + 1
-                else: end = m - 1
-            return -1
+        l, r = 0, len(nums) - 1
 
-        # Binary search in nums[i+1:]
-        for i, n in enumerate(nums):
-            res = search(i+1, len(nums)-1, target-n)
-            if res != -1: return [i+1, res+1]
+        while l < r:
+            if nums[l] + nums[r] > target: r -= 1
+            elif nums[l] + nums[r] < target: l += 1
+            else: return [l+1, r+1]
+        
         return [-1, -1]
