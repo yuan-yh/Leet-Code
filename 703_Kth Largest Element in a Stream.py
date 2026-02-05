@@ -1,14 +1,15 @@
 class KthLargest:
+    # min-heap: track top k largest element & top = target
     def __init__(self, k: int, nums: List[int]):
-        # Min-heap: track k largest element, heap top is the kth largest
         self.capacity = k
-        self.minHeap = nums
-        heapq.heapify(self.minHeap)
+        self.heap = nums
+        heapq.heapify(self.heap)
+        while len(self.heap) > self.capacity: heappop(self.heap)
 
     def add(self, val: int) -> int:
-        heappush(self.minHeap, val)
-        while len(self.minHeap) > self.capacity: heappop(self.minHeap)
-        return self.minHeap[0]
+        heappush(self.heap, val)
+        if len(self.heap) > self.capacity: heappop(self.heap)
+        return self.heap[0]
 
 
 # Your KthLargest object will be instantiated and called as such:
