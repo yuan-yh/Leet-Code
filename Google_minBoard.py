@@ -1,4 +1,8 @@
-```python
+
+
+
+
+
 class Solution:
     def minboard(self, roof: List[List[int]]) -> int:
         # Key: max match of row & col
@@ -23,6 +27,3 @@ class Solution:
         for r in range(row):
             if dfs(r, set()): res += 1
         return res
-```
-
-I practiced again the min boards to fix the roof question, is the code right?
