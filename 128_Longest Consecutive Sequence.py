@@ -11,7 +11,7 @@ class Solution:
             if n-1 in nums: continue
             # 3. expand rightwards
             start = n
-            while n+1 in nums: n += 1
-            res = max(res, n-start+1)
+            while n in nums: n += 1
+            res = max(res, n-start)
         
         return res
