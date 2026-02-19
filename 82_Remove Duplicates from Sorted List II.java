@@ -14,18 +14,19 @@
 class Solution {
     public ListNode deleteDuplicates(ListNode head) {
         ListNode vHead = new ListNode(0, head);
-        ListNode prev = vHead, cur = head;
+        ListNode cur = vHead;
 
-        while (cur != null && cur.next != null) {
-            if (cur.val == cur.next.val) {
-                // find the next node dif from cur, then cut all cur nodes
-                while (cur.next != null && cur.val == cur.next.val) cur = cur.next;
-                prev.next = cur.next;
+        while (cur.next != null && cur.next.next != null) {
+            int value = cur.next.val;
+            // case: duplicate
+            if (cur.next.next.val == value) {
+                while (cur.next != null && cur.next.val == value) {
+                    cur.next = cur.next.next;
+                }
             }
-            else prev = prev.next;
-            cur = cur.next;
+            // case: not duplicate
+            else cur = cur.next;
         }
-
         return vHead.next;
     }
 }
