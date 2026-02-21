@@ -3,17 +3,23 @@ class Solution:
         """
         Do not return anything, modify nums in-place instead.
         """
-        length = len(nums)
-        k = k % length
-        if k == 0: return
+        # 0. 2-line short-cut
+        k = k % len(nums)
+        nums[:] = nums[-k:] + nums[:-k]
 
-        def reverse(start, end):
-            while start < end:
-                nums[start], nums[end] = nums[end], nums[start]
-                start, end = start + 1, end - 1
+        # # 1. k % len(nums) to minimize rotate steps -> no change if 0
+        # k = k % len(nums)
+        # if k == 0: return
+
+        # def mirror(left: int, right: int):
+        #     while left < right:
+        #         nums[left], nums[right] = nums[right], nums[left]
+        #         left += 1
+        #         right -= 1
         
-        # 1. reverse the entire array
-        reverse(0, length - 1)
-        # 2. mirror reflection for the first k elements (nums[:k]) and the rest (nums[k:])
-        reverse(0, k - 1)
-        reverse(k, length - 1)
+        # # 2. mirror nums[:]
+        # mirror(0, len(nums) - 1)
+        
+        # # 3. mirror nums[:k) and nums[k:]
+        # mirror(0, k-1)
+        # mirror(k, len(nums)-1)

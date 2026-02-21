@@ -3,42 +3,34 @@
 
 class Solution {
     public String minWindow(String s, String t) {
-        int[] tCount = new int[128];
-        int tUniqueCharCount = 0;
-
-        // 1. count letter in t
-        for (int i = 0; i < t.length(); i++) {
-            if (tCount[t.charAt(i)] == 0) tUniqueCharCount++;
-            tCount[t.charAt(i)]++;
+        // 1. count t letter freq & unique letter to track missing
+        int[] tCnt = new int[128];
+        int miss = 0;
+        for (char c : t.toCharArray()) {
+            if (tCnt[c] == 0) miss += 1;
+            tCnt[c] += 1;
         }
 
-        // 2. sliding window in s
-        int left = 0, resLeft = -1, resRight = s.length();
+        // 2. loop s through window end
+        int start = 0, resL = -1, resR = s.length();
 
-        for (int right = 0; right < s.length(); right++) {
-            char cur = s.charAt(right);
-            tCount[cur] --;
+        for (int end = 0; end < s.length(); end ++) {
+            // 3. update the count of cur letter & miss if tCnt[cur] == 0
+            tCnt[s.charAt(end)] -= 1;
+            if (tCnt[s.charAt(end)] == 0) miss -= 1;
 
-            // update the tUniqueCharCount
-            if (tCount[cur] == 0) tUniqueCharCount--;
-
-            // process the substring which meets the requirement
-            while (tUniqueCharCount == 0) {
-                // update the minimum window length
-                if (right - left < resRight - resLeft) {
-                    resLeft = left;
-                    resRight = right;
+            // 4. when satisfy: update res & shrink the window start
+            while (miss == 0) {
+                if (end-start < resR-resL) {
+                    resL = start;
+                    resR = end;
                 }
-
-                // shift the left pointer
-                char tmp = s.charAt(left);
-                // 既然tmp出現次數為0，且s含有tmp；説明t也有tmp而且這個tmp滿足了substring條件
-                if (tCount[tmp] == 0) tUniqueCharCount ++;
-                tCount[tmp] ++;
-                left ++;
+                tCnt[s.charAt(start)] += 1;
+                if (tCnt[s.charAt(start)] > 0) miss += 1;
+                start += 1;
             }
         }
 
-        return (resLeft == -1 || resRight == s.length()) ? "" : s.substring(resLeft, resRight + 1);
+        return resL == -1 ? "" : s.substring(resL, resR + 1);
     }
 }
