@@ -1,3 +1,5 @@
+# 螺旋结构确保当你撞到墙壁或访问过的牢房并顺时针转90°时，新路径是开放的
+
 class Solution:
     def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
         directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]     # clockwise
