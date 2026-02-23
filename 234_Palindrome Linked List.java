@@ -1,5 +1,5 @@
-// Time complexity: O(n)
-// Space complexity: O(1)
+// 时间复杂度：O(n)，其中 n 是链表的长度（节点个数）。
+// 空间复杂度：O(1)。
 
 /**
  * Definition for singly-linked list.
@@ -12,26 +12,42 @@
  * }
  */
 class Solution {
-    public boolean isPalindrome(ListNode head) {
-        // 1. find the middle node: slow
-        ListNode fast = head, slow = head;
+    private ListNode findMiddle(ListNode head) {
+        ListNode slow = head, fast = head;
+
         while (fast != null && fast.next != null) {
-            fast = fast.next.next;
             slow = slow.next;
+            fast = fast.next.next;
         }
-        // 2. reverse the list (prev -> slow)
-        ListNode cur = slow, prev = null, tmp;
+        return slow;
+    }
+
+    private ListNode reverse(ListNode head) {
+        ListNode cur = head, prev = null, tmp;
+
         while (cur != null) {
             tmp = cur.next;
             cur.next = prev;
             prev = cur;
             cur = tmp;
         }
-        // 3. iterate both lists (head -> slow || prev -> slow) & compare nodes
-        while (prev != null) {
-            if (head.val != prev.val) return false;
-            head = head.next;
-            prev = prev.next;
+
+        return prev;
+    }
+
+    public boolean isPalindrome(ListNode head) {
+        // 1. find middle
+        ListNode mid = findMiddle(head);
+
+        // 2. reverse middle afterwards, now both left/right's tail pointed to the middle
+        ListNode p2 = reverse(mid);
+
+        // 3. compare
+        ListNode p1 = head;
+        while (p2 != null) {
+            if (p1.val != p2.val) return false;
+            p1 = p1.next;
+            p2 = p2.next;
         }
         return true;
     }

@@ -7,9 +7,10 @@
 class Solution:
     def getIntersectionNode(self, headA: ListNode, headB: ListNode) -> Optional[ListNode]:
         """
-        Let a = A to intersection, b = B to intersection, c = intersection to end.
-        Have 2 ptrs starting from headA and headB, switch to dif head when reach end, then they will meet in the intersection.
-        Because ptrA: a + c + b == ptrB: b + c + a
+        Let both pointers walk the same distance to meet at the intersection.
+        p1 = headA_to_intersection + same + headB_to_intersection
+        p2 = headB_to_intersection + same + headA_to_intersection
+        For no-intersection case, consider 'tail -> None' as the intersection.
         """
         pA, pB = headA, headB
 

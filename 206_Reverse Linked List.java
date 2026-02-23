@@ -1,4 +1,4 @@
-// Time complexity: O(n)
+// Time complexity: O(n)，其中 n 为链表节点个数。
 // Space complexity: O(1)
 
 /**
@@ -11,12 +11,8 @@
  *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
  * }
  */
-
-// Method 1: reverse iteratively：O(n)
 class Solution {
     public ListNode reverseList(ListNode head) {
-        // 1 -> 2 -> null // reverse: null <- 1 <- 2
-        // add connection: 'null <- 1' and break connection '1 -> 2'
         ListNode cur = head, prev = null, tmp;
 
         while (cur != null) {
