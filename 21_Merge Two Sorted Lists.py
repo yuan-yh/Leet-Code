@@ -26,3 +26,24 @@ class Solution:
                 l2 = t2
 
         return vHead.next
+
+# Method: shorter style
+class Solution:
+    def mergeTwoLists(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:
+        if not l2: return l1
+        vHead = cur = ListNode(0, l1)
+
+        while l2:
+            # case: l1 empty, compare l1.val vs l2.val
+            if not cur.next:
+                cur.next = l2
+                break
+
+            if cur.next.val > l2.val:
+                tmp = l2.next
+                l2.next = cur.next
+                cur.next = l2
+                l2 = tmp
+            cur = cur.next
+
+        return vHead.next
