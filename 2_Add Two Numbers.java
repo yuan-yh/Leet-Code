@@ -13,22 +13,30 @@
  */
 class Solution {
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-        ListNode vHead = new ListNode();
-        ListNode tmp = vHead;
-        int carryOn = 0;
+        // 1. short-cut
+        if (l1 == null) return l2;
+        if (l2 == null) return l1;
 
-        while (l1 != null || l2 != null || carryOn > 0) {
+        // 2. process
+        int addson = 0;
+        ListNode vHead = new ListNode();
+        ListNode cur = vHead;
+
+        while (addson != 0 || l1 != null || l2 != null) {
+            // 3. check l1
             if (l1 != null) {
-                carryOn += l1.val;
+                addson += l1.val;
                 l1 = l1.next;
             }
+            // 4. check l2
             if (l2 != null) {
-                carryOn += l2.val;
+                addson += l2.val;
                 l2 = l2.next;
             }
-            tmp.next = new ListNode(carryOn % 10);
-            carryOn = carryOn / 10;
-            tmp = tmp.next;
+            // 5. check & update addson to next node
+            cur.next = new ListNode(addson % 10, null);
+            cur = cur.next;
+            addson /= 10;
         }
 
         return vHead.next;
