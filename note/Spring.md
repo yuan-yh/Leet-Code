@@ -64,7 +64,7 @@ Controller 调用 Model 层（Service → Repository）去数据库查出用户�
 Controller 把数据返回给 View 展示
 ```
 
-### WorkFlow*
+### WorkFlow
 ```完整的生命周期
 Spring 启动
     ↓
