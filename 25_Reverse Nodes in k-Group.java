@@ -13,37 +13,33 @@
  */
 class Solution {
     public ListNode reverseKGroup(ListNode head, int k) {
-        // 1. iterate to get LL-length
+        ListNode vHead = new ListNode(0, head);
+        ListNode cur = vHead;
+
+        // 1. record length
         int length = 0;
-        ListNode tmp = head;
-        while (tmp != null) {
-            tmp = tmp.next;
-            length ++;
+        while (cur.next != null) {
+            length += 1;
+            cur = cur.next;
         }
 
-        // edge case: len = 1 || k = 1
-        if (length == 1 || k == 1) return head;
+        // 2. calculate reverse_cnt
+        int cnt = length / k;
 
-        // 2. reverse x times (then append rest)
-        ListNode vHead = new ListNode(0, head);
-        ListNode leftwards = vHead, left = head, cur = head, prev = null;
-        int reverse = length / k, count;
-
-        for (int i = 0; i < reverse; i++) {
-            count = 0;
-            while (count < k) {
+        // 3. reverse
+        cur = vHead;
+        for (int i = 0; i < cnt; i++) {
+            ListNode tail = cur.next, prev = null, tmp;
+            for (int j = 0; j < k; j++) {
                 tmp = cur.next;
-                cur.next = prev;
-                prev = cur;
-                cur = tmp;
-                count ++;
+                cur.next = cur.next.next;
+                tmp.next = prev;
+                prev = tmp;
             }
-            leftwards.next = prev;
-            left.next = cur;
-
-            leftwards = left;
-            left = cur;
-            prev = null;
+            // 4. shift cur
+            tail.next = cur.next;
+            cur.next = prev;
+            cur = tail;
         }
 
         return vHead.next;
