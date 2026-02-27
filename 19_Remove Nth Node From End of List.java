@@ -13,22 +13,22 @@
  */
 class Solution {
     public ListNode removeNthFromEnd(ListNode head, int n) {
-        // the fast & slow ptr is 'n' away
-        ListNode fast = head, slow = head;
-        // 1. ensure the fast ptr is 'n' ahead
-        while (n > 0) {
-            fast = fast.next;
-            n--;
-        }
-        // 2. remove the slow.next node
-        // case: remove the head node
-        if (fast == null) return head.next;
-        // case: remove the middle / tail node
+        ListNode vHead = new ListNode(0, head);
+
+        ListNode fast = vHead, slow = vHead;
+
+        // 1. shift fast n steps ahead
+        for (int i = 0; i < n; i++) fast = fast.next;
+
+        // 2. shift together until tail
         while (fast.next != null) {
-            slow = slow.next;
             fast = fast.next;
+            slow = slow.next;
         }
+
+        // 3. delete node
         slow.next = slow.next.next;
-        return head;
+
+        return vHead.next;
     }
 }
