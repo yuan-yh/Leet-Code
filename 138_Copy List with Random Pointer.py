@@ -9,18 +9,21 @@ class Node:
 
 class Solution:
     def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':
-        # HashMap: key - original node, val - clone node (node.val cannot as key for duplicates)
         record = {}
-        # 1. clone node
-        tmp = head
-        while tmp:
-            if tmp not in record: record[tmp] = Node(tmp.val)
-            tmp = tmp.next
-        # 2. update next/random
-        tmp = head
-        while tmp:
-            clone = record[tmp]
-            if tmp.next: clone.next = record[tmp.next]
-            if tmp.random: clone.random = record[tmp.random]
-            tmp = tmp.next
-        return record[head] if head else None
+        record[None] = None
+        
+        # 1. clone nodes
+        org = head
+        while org:
+            record[org] = Node(org.val)
+            org = org.next
+        
+        # 2. update next & random
+        org = head
+        while org:
+            clone = record[org]
+            clone.next = record[org.next]
+            clone.random = record[org.random]
+            org = org.next
+
+        return record[head]
