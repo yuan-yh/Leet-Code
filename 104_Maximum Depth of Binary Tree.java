@@ -20,9 +20,7 @@
 // Method 1: Recursion
 class Solution {
     public int maxDepth(TreeNode root) {
-        if (root == null) return 0;
-
-        return 1 + Math.max(maxDepth(root.left), maxDepth(root.right));
+        return (root == null) ? 0 : 1 + Math.max(maxDepth(root.left), maxDepth(root.right));
     }
 }
 
@@ -42,5 +40,26 @@ class Solution {
         }
         depthHelper(node.left, curDepth + 1);
         depthHelper(node.right, curDepth + 1);
+    }
+}
+
+// Method 3: BFS
+class Solution {
+    public int maxDepth(TreeNode root) {
+        Queue<TreeNode> q = new LinkedList<>();
+        if (root != null) q.add(root);
+        int res = 0;
+
+        while (!q.isEmpty()) {
+            int cnt = q.size();
+            res += 1;
+            for (int i = 0; i < cnt; i++) {
+                TreeNode tmp = q.poll();
+                if (tmp.left != null) q.add(tmp.left);
+                if (tmp.right != null) q.add(tmp.right);
+            }
+        }
+
+        return res;
     }
 }

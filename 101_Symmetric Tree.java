@@ -1,5 +1,5 @@
 // 时间复杂度：O(n)
-// 空间复杂度：O(n)
+// 空间复杂度：O(n) -- 最差情况下（二叉树退化为链表）
  
 /**
  * Definition for a binary tree node.
@@ -17,14 +17,14 @@
  * }
  */
 class Solution {
-    public boolean isSymmetric(TreeNode root) {
-        return symmetricHelper(root.left, root.right);
+    private boolean check(TreeNode n1, TreeNode n2) {
+        if (n1 == null && n2 == null) return true;
+        if (n1 == null || n2 == null || n1.val != n2.val) return false;
+
+        return (check(n1.left, n2.right) && check(n1.right, n2.left));
     }
 
-    private boolean symmetricHelper(TreeNode p, TreeNode q) {
-        // Given symmetric: left-subtree-left vs right-subtree-right, left-subtree-right vs right-subtree-left
-        if (p == null || q == null) return (p == q);
-
-        return (p.val == q.val) && (symmetricHelper(p.left, q.right)) && (symmetricHelper(p.right, q.left));
+    public boolean isSymmetric(TreeNode root) {
+        return check(root.left, root.right);
     }
 }

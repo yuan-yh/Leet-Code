@@ -16,15 +16,14 @@
  *     }
  * }
  */
+ */
 class Solution {
     public TreeNode invertTree(TreeNode root) {
-        // end case: empty node
-        if (root == null) return null;
-
-        // process: switch subtrees
-        TreeNode tmp = root.left;
-        root.left = invertTree(root.right);
-        root.right = invertTree(tmp);
+        if (root != null) {
+            TreeNode left = root.left, right = root.right;
+            root.left = invertTree(right);
+            root.right = invertTree(left);
+        }
         return root;
     }
 }
