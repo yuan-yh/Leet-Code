@@ -21,23 +21,17 @@
  * }
  */
 class Solution {
-    private int count = 0;
+    private int diameter = 0;
+
+    private int dfs(TreeNode node) {
+        if (node == null) return -1;
+        int left = dfs(node.left) + 1, right = dfs(node.right) + 1;
+        this.diameter = Math.max(this.diameter, left + right);
+        return Math.max(left, right);
+    }
 
     public int diameterOfBinaryTree(TreeNode root) {
         dfs(root);
-        return count;
-    }
-
-    private int dfs(TreeNode node) {
-        // end case: null
-        if (node == null) return 0;
-
-        // measure left and right length
-        int left = dfs(node.left);
-        int right = dfs(node.right);
-
-        // update diameter if passing from left through the current node to right
-        count = Math.max(count, left + right);
-        return (1 + Math.max(left, right));
+        return this.diameter;
     }
 }
