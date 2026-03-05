@@ -1,6 +1,34 @@
 # AI
+## Introduction
+### Function Calling
+
+把工具(tool)描述从 system prompt中剥离，用JSON格式统一定义函数名，函数介绍，参数字段，并规范AI调用工具的回复格式。
+
+### MCP (Model Control Protocol)
+我们把tool变成服务，统一的托管，让所有的agent都来调用，这就是mcp server。 
+- mcp是一个通信协议，专门用来规范agent和tool服务之间是怎么交互的。
+- 运行tool的服务叫做mcp server，调用它的agent叫做mcp client。
+- mcp规定了mcp server如何和mcp client通信，以及mcp server有哪些接口。​
+
+mcp server既可以和agent跑在同一台机器上，通过标准输入输出进行通信。也可以被部署在网络上，通过http进行通信。虽然mcp是为了ai而定制出来的标准，但实际上mcp本身却和ai模型没有关系，他并不关心agent用的是哪个模型，mcp只负责帮agent托管工具、资源。
+
+#### MCP Workflow
+
+1. 用户输入。
+
+2. Agent 通过 MCP 协议向 MCP Server 发起类似 `tools/list` 的请求，发现可用的工具。
+
+3. Agent 拿到 MCP Server 返回的工具定义后，**把它转换成具体 AI 模型能理解的 Function Calling 格式**，然后连同用户的 prompt 一起发给模型。
+
+4. AI 模型根据 user prompt 和工具定义，自主决定调用哪个工具。
+
+5. Agent 收到模型的工具调用指令后，再通过 MCP 协议去实际执行（调用 MCP Server 上的网页浏览服务），拿到结果后喂回给模型。
+
+6. 模型生成最终建议。
+
+
 ## RAG
-> RAG 的核心是把外部知识检索和大语言模型的生成能力结合起来 (先查资料，再回答问题)
+> RAG 的核心是把外部知识检索和大语言模型的生成能力结合起来 (先查资料，再回答问题, 提升效率&準確性)
 
 ### 传统 LLM 的三个痛点
 - 知识局限性：模型训练完之后知识就固定了，无法实时更新。RAG 可以动态检索外部知识库（最新政策、专业文献），确保回答与时俱进。
