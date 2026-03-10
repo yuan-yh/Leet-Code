@@ -86,18 +86,71 @@ MCP    → 外部系统调用（标准化协议）
 
 4. 存储层: 所有文档存入 Vector Database（向量数据库），支持语义相似度检索。
 
+Example of File Upload API:
+
+接入层  FileUploadController   ← Controller (只负责接收请求和返回响应，不写任何业务逻辑，业务全部委托给Service层)
+           ↓ 调用
+业务层  VectorIndexService     ← indexSingleFile()
+           ↓ 调用
+服务层  ChunkService           ← 分片
+        EmbeddingService       ← 向量化
+        MilvusClient           ← 存储
+
 ### Agent的核心设计模式
 
-知识库Agent
-- 核心模式：RAG模式（检索增强生成）
-- 上传时：文档 → 分片 → (索引) Embedding → 存入向量库
-- 查询时：问题向量化 → 召回 (查top10最相似的片段) → 重排 (計算语义相似度) → 生成答案 (top3片段+问题 -> LLM回答)
+#### 知识库Agent
 
-对话Agent
+> 核心模式：RAG模式（检索增强生成）
+
+##### 1. 上传时：文档 → 分片 → (索引) Embedding → 存入向量库 (存储的是 向量+原始文本 两份数据)
+
+- 文件分块 (两层分片策略)
+
+第一层：按Markdown标题(#)切分成多个Section
+
+第二层：对每个Section判断大小
+  ├── Section < MaxSize (800)  → 直接作为一个分片
+  └── Section > MaxSize (800)  → 按段落边界继续切分
+                                + Overlap重叠（100, 相邻分片之间有内容重叠, 保留上下文语义连贯）
+
+- 索引（向量化+存储）
+
+第一步：向量化 (Embedding), 调用阿里云DashScope API
+
+第二步：构建元数据 (路径, 第几个分片, 总分片数, 章节标题)
+
+第三步：存入Milvus (UUID, 原始文本片段, vector, 元数据)
+
+- 整体流程串联
+
+读文件
+  → 按标题分Section
+    → 每个Section判断大小 → 按段落切分+Overlap保持上下文, MaxSize=800
+      → 每个chunk：
+        调用DashScope API → 生成vector
+        构建metadata（路径、索引等）
+        存入Milvus：{ content (最终喂给LLM), vector, metadata }
+
+##### 2. 查询时：问题向量化 → 召回 (查top10最相似的片段) → 重排 (計算语义相似度) → 生成答案 (top3片段原始文本+问题 -> LLM回答)
+
+> 召回（Top 10）和重排（Top 3）用的是**不同的模型**
+
+- 召回部分用的是 Milvus内置的L2距离搜索: `java.withMetricType(io.milvus.param.MetricType.L2)  // 欧式距离`
+
+召回  → Embedding模型 + 向量相似度算法（余弦相似度）
+        速度快、成本低，但准确率有限
+
+重排  → Cross Encoder模型
+        逐对计算语义相关性，慢但准确率高
+```
+
+#### 对话Agent
+
 - 核心模式：RAG召回 (獲取context構建system prompt) + ReAct (Reasoning + Act工具调用)多輪交互
 - 思考 (查什麽) → 行动 (用工具) → 观察，循环直到有答案
 
-运维Agent
+#### 运维Agent
+
 - 核心模式：RAG召回 (獲取context + tool info構建system prompt) + Plan → Execute → Replan （规划→执行→调整）多輪交互
 - Planner制定排查计划 → Executor调用工具执行 → Replanner评估并调整
 
