@@ -11,7 +11,7 @@ class Solution:
         idx = {n : i for i, n in enumerate(inorder)}
         
         def dfs(il, pl, pr) -> Optional[TreeNode]:
-            if pl >= pr: return None
+            if pl >= pr: return None 
 
             root = TreeNode(postorder[pr-1])
             i = idx[root.val]
