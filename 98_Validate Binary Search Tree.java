@@ -17,17 +17,14 @@ class Solution {
 
 // Method 2: In-order
 class Solution {
-    private long prev = Long.MIN_VALUE; 
+    private boolean validate(TreeNode node, long minVal, long maxVal) {
+        if (node == null) return true;
 
-    public boolean isValidBST(TreeNode root) {
-        return inorder(root);
+        return (node.val > minVal && node.val < maxVal && validate(node.left, minVal, Math.min(node.val, maxVal)) && validate(node.right, Math.max(node.val, minVal), maxVal));
     }
 
-    private boolean inorder(TreeNode node) {
-        if (node == null) return true;
-        if ((!inorder(node.left)) || (node.val <= prev)) return false;
-        prev = node.val;
-        return inorder(node.right);
+    public boolean isValidBST(TreeNode root) {
+        return validate(root, Long.MIN_VALUE, Long.MAX_VALUE);
     }
 }
 
