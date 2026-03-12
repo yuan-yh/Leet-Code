@@ -17,29 +17,31 @@
  * }
  */
 class Solution {
-    private List<List<Integer>> res = new ArrayList<>();
-    private List<Integer> cur = new ArrayList<>();
+    private List<List<Integer>> res;
+    private List<Integer> curPath;
 
-    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
-        bt(root, targetSum);
-        return res;
+    private void bt(TreeNode node, int target) {
+        if (node == null) return;
+
+        curPath.add(node.val);
+        target -= node.val;
+
+        if (node.left == null && node.right == null) {
+            if (target == 0) res.add(new ArrayList<>(curPath));
+            curPath.remove(curPath.size()-1);
+            return;
+        }
+
+        bt(node.left, target);
+        bt(node.right, target);
+        curPath.remove(curPath.size()-1);
     }
 
-    private void bt(TreeNode n, int target) {
-        if (n == null) return;
-        
-        cur.add(n.val);
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        this.res = new ArrayList<>();
+        this.curPath = new ArrayList<>();
 
-        // end case: leaf
-        if (n.left == null && n.right == null) {
-            if (target == n.val) res.add(new ArrayList<>(cur));
-        } 
-        else {
-            // process
-            bt(n.left, target - n.val);
-            bt(n.right, target - n.val);
-        }
-        // backtrack
-        cur.remove(cur.size() - 1);
+        bt(root, targetSum);
+        return this.res;
     }
 }
