@@ -16,11 +16,8 @@ class Solution {
     public TreeNode lowestCommonAncestor(TreeNode node, TreeNode p, TreeNode q) {
         if (node == null || node == p || node == q) return node;
 
-        TreeNode leftLCA = lowestCommonAncestor(node.left, p, q);
-        TreeNode rightLCA = lowestCommonAncestor(node.right, p, q);
-
-        if (leftLCA != null && rightLCA != null) return node;
-        else if (leftLCA != null) return leftLCA;
-        return rightLCA;
+        TreeNode l = lowestCommonAncestor(root.left, p, q);
+        TreeNode r = lowestCommonAncestor(root.right, p, q);
+        return (l != null && r != null) ? root : (l == null) ? r : l;
     }
 }
