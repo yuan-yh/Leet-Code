@@ -3,73 +3,66 @@
 // V is the number of courses and E is the number of prerequisites.
 
 class Solution {
-    // Method 2: DFS
-    private int[] visit;
-    private Map<Integer, List<Integer>> prep;
-
-    private boolean dfs(int course) {
-        // 3. check for verified result || cycle
-        if (this.visit[course] == 1) return false;
-        if (this.visit[course] == 2) return true;
-        
-        // 4. update & check its prep
-        this.visit[course] = 1;
-        for (int i : this.prep.get(course)) {
-            if (!dfs(i)) return false;
-        }
-        this.visit[course] = 2;
-        return true;
-    }
-
-    public boolean canFinish(int numCourses, int[][] preq) {
-        // 1. build prep list & visit array
-        this.prep = new HashMap<>();
-        for (int i = 0; i < numCourses; i++) this.prep.put(i, new ArrayList<>());
-
-        for (int[] i : preq) this.prep.get(i[0]).add(i[1]);
-        this.visit = new int[numCourses];
-
-        // 2. check for cycle via DFS
-        for (int i = 0; i < numCourses; i++) {
-            if (!dfs(i)) return false;
-        }
-        return true;
-    }
-
-    // // Method 1: Topological Sort
-    // // Time complexity: O(V+E)
-    // // Space complexity: O(V+E)
-    // // Where V is the number of courses and E is the numbe
+    // // Method 1. Topological Sort
     // public boolean canFinish(int numCourses, int[][] preq) {
-    //     // 1. build adj list & record in-degree
-    //     Map<Integer, List<Integer>> adj = new HashMap<>();
-    //     for (int i = 0; i < numCourses; i++) adj.put(i, new ArrayList<>());
-    //     int[] indegree = new int[numCourses];
+    //     // 1. build adj-list & record in-degree
+    //     Map<Integer, List<Integer>> cnext = new HashMap<>();
+    //     int[] inDegree = new int[numCourses];
 
+    //     for (int i = 0; i < numCourses; i++) cnext.put(i, new ArrayList<>());
     //     for (int[] i : preq) {
-    //         int a = i[0], b = i[1];
-    //         adj.get(b).add(a);
-    //         indegree[a] += 1;
+    //         cnext.get(i[1]).add(i[0]);
+    //         inDegree[i[0]] += 1;
     //     }
-
-    //     // 2. start from those w/n in-degree, check if we can finish all
+        
+    //     // 2. start from those w/n in-degree
+    //     int cnt = 0;
     //     Deque<Integer> q = new LinkedList<>();
     //     for (int i = 0; i < numCourses; i++) {
-    //         if (indegree[i] == 0) q.offer(i);
+    //         if (inDegree[i] == 0) q.offer(i);
     //     }
 
-    //     int cnt = 0;
-
     //     while (!q.isEmpty()) {
-    //         int tmp =  q.poll();
+    //         int tmp = q.poll();
     //         cnt += 1;
-    //         List<Integer> tmpNext = adj.get(tmp);
-    //         for (int i = 0; i < tmpNext.size(); i++) {
-    //             int nextCourse = tmpNext.get(i);
-    //             indegree[nextCourse] -= 1;
-    //             if (indegree[nextCourse] == 0) q.offer(nextCourse);
+    //         for (int cn : cnext.get(tmp)) {
+    //             inDegree[cn] -= 1;
+    //             if (inDegree[cn] == 0) q.offer(cn);
     //         }
     //     }
     //     return cnt == numCourses;
     // }
+
+    // Method 2. DFS - BT
+    private Map<Integer, List<Integer>> cprev;
+    private int[] visit;
+
+    private boolean dfs(int course) {
+        // 3. check for loop or verified results
+        if (visit[course] == 1) return false;
+        if (visit[course] == 2) return true;
+        // 4. update the status & process its preq
+        visit[course] = 1;
+        for (int cp : cprev.get(course)) {
+            if (!dfs(cp)) return false;
+        }
+        // 5. update to verified & return
+        visit[course] = 2;
+        return true;
+    }
+
+    public boolean canFinish(int numCourses, int[][] preq) {
+        this.cprev = new HashMap<>();
+        this.visit = new int[numCourses];
+
+        // 1. build preq list for each course
+        for (int i = 0; i < numCourses; i++) cprev.put(i, new ArrayList<>());
+        for (int[] i : preq) cprev.get(i[0]).add(i[1]);
+
+        // 2. loop - DFS to check each class
+        for (int i = 0; i< numCourses; i++) {
+            if (!dfs(i)) return false;
+        }
+        return true;
+    }
 }
