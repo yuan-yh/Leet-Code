@@ -1,14 +1,14 @@
 class Solution:
     def findMin(self, nums: List[int]) -> int:
-        # short-cut
-        if nums[0] < nums[-1]: return nums[0]
-
-        # Binary Search for i such that nums[i] < nums[i-1] in [l, r]
+        # [greater, smaller]
         l, r = 0, len(nums) - 1
+
         while l < r:
+            # 左中点会偏左, 保证r=m时更新还会动 (r=m w/ 左中点 and l=m w/右中点)
             m = (l + r) >> 1
-            # case: in the left rotated part: nums[m] > nums[r] -> l = m+1
+            # case: in the greater area -> [m+1, r]
             if nums[m] > nums[r]: l = m + 1
-            # case: in the right original part: nums[m] <= nums[r] -> r = m
+            # case: in the smaller area -> [l, m]
             else: r = m
+        
         return nums[l]
