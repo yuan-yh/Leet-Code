@@ -1,20 +1,20 @@
 class Solution:
     def generateParenthesis(self, n: int) -> List[str]:
-        def bt(openLeft: int, closeLeft: int):
+        def bt(openP, closeP):
             # end case
-            if closeLeft == 0:
+            if openP == n and closeP == n:
                 res.append(''.join(curPath))
                 return
-            # choose to ')' or not
-            if closeLeft > openLeft:
+            # process: choose ) or not
+            if openP > closeP: 
                 curPath.append(')')
-                bt(openLeft, closeLeft-1)
+                bt(openP, closeP + 1)
                 curPath.pop()
-            if openLeft > 0:
+            if openP < n:
                 curPath.append('(')
-                bt(openLeft-1, closeLeft)
+                bt(openP + 1, closeP)
                 curPath.pop()
 
-        curPath, res = [], []
-        bt(n, n)
+        res, curPath = [], []
+        bt(0, 0)
         return res
