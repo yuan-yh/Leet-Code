@@ -1,18 +1,19 @@
-MAPPING = "", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"
-
 class Solution:
     def letterCombinations(self, digits: str) -> List[str]:
-        def bt(idx, end):
+        def bt(idx: int):
             # end case
-            if idx == end:
+            if idx == len(digits):
                 res.append(''.join(curPath))
                 return
+            
             # process
-            for c in MAPPING[int(digits[idx])]:
+            for c in MAPPINGS[int(digits[idx]) - 2]:
                 curPath.append(c)
-                bt(idx + 1, end)
+                bt(idx + 1)
                 curPath.pop()
-                
-        curPath, res = [], []
-        bt(0, len(digits))
+
+        MAPPINGS = ["abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"]
+
+        res, curPath = [], []
+        bt(0)
         return res

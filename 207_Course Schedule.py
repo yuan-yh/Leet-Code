@@ -1,52 +1,52 @@
 class Solution:
-    # # Method 1: topological sort
+    # # 1. Topological Sort
     # def canFinish(self, numCourses: int, preq: List[List[int]]) -> bool:
-    #     # 1. build adj-list & record in-degree
     #     cnext = [[] for _ in range(numCourses)]
-    #     indegree = [0] * numCourses
-
+    #     inDeg = [0] * numCourses
+        
+    #     # 1. init
     #     for a, b in preq:
     #         cnext[b].append(a)
-    #         indegree[a] += 1
+    #         inDeg[a] += 1
         
-    #     # 2. start from those w/n in-degree
+    #     # 2. loop to process those w/n in-degrees
     #     q = deque()
-    #     for c, ind in enumerate(indegree):
-    #         if ind == 0: q.append(c)
+    #     for i, d in enumerate(inDeg):
+    #         if d == 0: q.append(i)
         
     #     cnt = 0
     #     while q:
-    #         tmp = q.popleft()
+    #         tmp = q.pop()
     #         cnt += 1
 
-    #         for c in cnext[tmp]:
-    #             indegree[c] -= 1
-    #             if indegree[c] == 0: q.append(c)
+    #         for cn in cnext[tmp]:
+    #             inDeg[cn] -= 1
+    #             if inDeg[cn] == 0: q.append(cn)
     #     return cnt == numCourses
-        
-    # Method 2: DFS
+
+    # 2. DFS
     def canFinish(self, numCourses: int, preq: List[List[int]]) -> bool:
-        # for each class, track to preq to see if it can be finished
+        # 1. init w/ prep
         cprev = [[] for _ in range(numCourses)]
-        visit = [0] * numCourses
-
-        def dfs(course: int) -> bool:
-            # 2. check for loop or verified ressults
-            if visit[course] == 1: return False
-            if visit[course] == 2: return True
-        
-            # 3. update the status then check for its preq
-            visit[course] = 1
-            for cp in cprev[course]: 
-                if not dfs(cp): return False
-            # 4. update to verified
-            visit[course] = 2
-            return True
-
-        # 1. build prep for each class
         for a, b in preq: cprev[a].append(b)
+
+        # 2. init the valid status (0-not check, 1-checking, 2-valid)
+        valid = [0] * numCourses
+
+        # 3. dfs for each course, check if each can be completed
+        def bt(course: int) -> bool:
+            # end case
+            if valid[course] == 2: return True
+            if valid[course] == 1: return False
+            # process
+            valid[course] = 1
+
+            for cp in cprev[course]:
+                if not bt(cp): return False
+            
+            valid[course] = 2
+            return True
         
         for c in range(numCourses):
-            if not dfs(c): return False
-
+            if not bt(c): return False
         return True

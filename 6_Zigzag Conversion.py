@@ -1,14 +1,18 @@
 class Solution:
     def convert(self, s: str, numRows: int) -> str:
-        # edge case
+        # Edge case
         if numRows == 1: return s
 
-        # change direction: if curRow == 0 -> down (+1); if curRow == numRows - 1 -> up (-1)
+        # ZigZag = Down -> Up -> Down -> ...
         res = [""] * numRows
+        # 1. init w/ the first row & downwards
+        r, d = 0, -1
 
-        curRow, d = 0, -1
+        # 2. loop the given word
         for c in s:
-            res[curRow] += c
-            if curRow == 0 or curRow == numRows - 1: d = -d
-            curRow += d
+            res[r] += c
+            # 3. change direction when touch boundary
+            if r == 0 or r == numRows - 1: d = -d
+            r += d
+
         return ''.join(res)
