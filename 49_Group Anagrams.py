@@ -1,12 +1,12 @@
 class Solution:
     def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
-        # HashMap: key-sorted_str, val-[str]
-        record = defaultdict(list)
-
+        # sort each word in lexico order as key
+        record = {}
         for s in strs:
-            # 1. sort as the key
             key = ''.join(sorted(s))
-            # 2. append to record[sorted]
+            if key not in record: record[key] = []
             record[key].append(s)
-
-        return list(record.values())
+        
+        res = []
+        for _, val in record.items(): res.append(val)
+        return res
