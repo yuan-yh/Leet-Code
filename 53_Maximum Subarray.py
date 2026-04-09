@@ -5,13 +5,17 @@ class Solution:
         # However, if presum <= 0, the sum is always greater to restart;
         #          if presum > 0, the sum is always greater to continue to add.
         # Edge Case: all negative components
-        res = presum = nums[0]
-
-        for n in nums[1:]:
-            # 1. update presum: continue to add or restart
-            presum = max(n, presum + n)
-            # 2. update res: current digit or presum
-            res = max(res, presum)
+        
+        # Prefix Sum + Greedy
+        res, curSum = -inf, 0
+        # Case: all negative || non-negative
+        for n in nums:
+            # case: single digit
+            res = max(res, n)
+            # case: subarray
+            curSum += n
+            if curSum < 0: curSum = 0
+            else: res = max(res, curSum)
 
         return res
 

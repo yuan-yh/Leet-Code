@@ -9,21 +9,19 @@ class Node:
 
 class Solution:
     def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':
-        record = {}
-        record[None] = None
-        
-        # 1. clone nodes
-        org = head
-        while org:
-            record[org] = Node(org.val)
-            org = org.next
-        
-        # 2. update next & random
-        org = head
-        while org:
-            clone = record[org]
-            clone.next = record[org.next]
-            clone.random = record[org.random]
-            org = org.next
+        # 1. clone (original : clone)
+        record = { None: None }
+        cur = head
 
+        while cur:
+            ccur = Node(cur.val)
+            record[cur] = ccur
+            cur = cur.next
+        # 2. connect
+        cur = head
+        while cur:
+            clone = record[cur]
+            clone.next = record[cur.next]
+            clone.random = record[cur.random]
+            cur = cur.next
         return record[head]

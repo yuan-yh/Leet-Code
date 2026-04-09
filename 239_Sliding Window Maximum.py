@@ -1,38 +1,37 @@
-# Method 1: record index - easier to handle duplicates
 class Solution:
+    # Method: Deque based on 'idx'
     def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
-        # Monotonic stack: record idx in DESC for nums[i]
-        q = deque()
         res = []
+        q = deque() # DESC Order of digits but record in idx
 
         for i, n in enumerate(nums):
-            # case: cur >= tail: remove all smaller prefix then attach
-            # case: cur < tail: attach
             while q and n >= nums[q[-1]]: q.pop()
             q.append(i)
-            # window: record head when valid, then remove expired if head
+
             start = i - k + 1
             if start >= 0:
                 res.append(nums[q[0]])
-                if start == q[0]: q.popleft()
+                if q[0] == start: q.popleft()
         return res
 
-# # Method 2: record values - be careful for duplicates
-# class Solution:
-#     def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
-#         # Use Deque to track valid max in the cur window
-#         q = deque()
-#         res = []
+    # # Method: Max-Heap based on (digit, index)
+    # def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
+    #     # Max-heap to track the max value within the current valid window
+    #     res, max_heap = [], []
 
-#         for i, n in enumerate(nums):
-#             # Case: >= tail: pop until empty or until >= cur then attach
-#             # Case: <= tail: attach
-#             while q and q[-1] < n: q.pop()
-#             q.append(n)
-#             # Case: expire window start - matter if it is the head
-#             start = i - k + 1
-#             if start >= 0:
-#                 res.append(q[0])
-#                 if nums[start] == q[0]: q.popleft()
+    #     # 1. init
+    #     for i in range(k-1): heappush(max_heap, (-nums[i], i))
 
-#         return res
+    #     # 2. loop
+    #     expire = -1
+    #     for i in range(k-1, len(nums)):
+    #         # expire
+    #         while max_heap and max_heap[0][1] <= expire: 
+    #             heappop(max_heap)
+    #         # add cur digit
+    #         heappush(max_heap, (-nums[i], i))
+    #         # find the max
+    #         res.append(-max_heap[0][0])
+    #         expire += 1
+
+    #     return res
