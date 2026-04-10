@@ -1,17 +1,13 @@
 class Solution:
     def minMeetingRooms(self, intervals: List[List[int]]) -> int:
-        # Heap: when loop a new meeting, pop ended -> push end time -> record max length
-        res = 0
-        heap = []
-
-        # 1. sort based on the starting time
+        # 1. sort based on start time
         intervals.sort(key = lambda x : x[0])
+        # 2. track room based on end time (min-heap)
+        room = []
+        res = 0
 
         for start, end in intervals:
-            # 2. pop expired meetings
-            while heap and heap[0] <= start: heappop(heap)
-            # 3. push new end time
-            heappush(heap, end)
-            # 4. record max rooms
-            res = max(res, len(heap))
+            while room and room[0] <= start: heappop(room)
+            heappush(room, end)
+            res = max(res, len(room))
         return res
