@@ -1,32 +1,26 @@
 class Solution:
     # # Method 1: choose or not choose
     # def subsets(self, nums: List[int]) -> List[List[int]]:
-    #     def dfs(idx, end):
-    #         # end case
-    #         if idx == end:
+    #     def bt(idx: int):
+    #         if idx == len(nums):
     #             res.append(list(curPath))
     #             return
-    #         # process: choose or not choose
-    #         dfs(idx + 1, end)
+    #         bt(idx + 1)
     #         curPath.append(nums[idx])
-    #         dfs(idx + 1, end)
+    #         bt(idx + 1)
     #         curPath.pop()
-        
     #     res, curPath = [], []
-    #     dfs(0, len(nums))
+    #     bt(0)
     #     return res
     
-    # Method 2: not choose or choose from range
+    # Method 2: choose from a given range
     def subsets(self, nums: List[int]) -> List[List[int]]:
-        def dfs(start, end):
+        def bt(idx: int):
             res.append(list(curPath))
-
-            for i in range(start, end):
+            for i in range(idx, len(nums)):
                 curPath.append(nums[i])
-                dfs(i + 1, end)
+                bt(i + 1)
                 curPath.pop()
-
-        
         res, curPath = [], []
-        dfs(0, len(nums))
+        bt(0)
         return res

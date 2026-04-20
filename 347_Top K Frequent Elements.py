@@ -1,12 +1,12 @@
 # Method 1: Bucket Sort - O(n)
 class Solution:
     def topKFrequent(self, nums: List[int], k: int) -> List[int]:
-        # 1. count letter frequency
+        # 1. count
         count = Counter(nums)
-        # 2. create len(nums) buckets and fill
+        # 2. push into frequency_bucket
         bucket = [[] for _ in range(len(nums) + 1)]
-        for i, cnt in count.items():
-            bucket[cnt].append(i)
+        for val, freq in count.items():
+            bucket[freq].append(val)
         # 3. loop backwards
         res = []
         for i in range(len(nums), -1, -1):
