@@ -1,23 +1,22 @@
 class RandomizedSet:
-
+    # insert/remove O(1): track w/ hashset or dictionary
+    # random O(1): fetch from array index
     def __init__(self):
+        self.record = {}   # val:idx
         self.nums = []
-        self.record = defaultdict()     # key: nums[i], val: i
 
     def insert(self, val: int) -> bool:
-        # insert & True if not exist
         if val in self.record: return False
-
         self.record[val] = len(self.nums)
         self.nums.append(val)
         return True
 
     def remove(self, val: int) -> bool:
-        # remove & True if exist 
-        # O(1) -> remove from tail: pop() -> swap val w/ tail
         if val not in self.record: return False
+        # swap with the tail element, then update & pop tail
+        tail = self.nums[-1]
+        idx = self.record[val]
 
-        idx, tail = self.record[val], self.nums[-1]
         self.nums[idx] = tail
         self.record[tail] = idx
 
@@ -26,7 +25,8 @@ class RandomizedSet:
         return True
 
     def getRandom(self) -> int:
-        return choice(self.nums)
+        idx = random.randint(0, len(self.nums) - 1)
+        return self.nums[idx]
 
 
 # Your RandomizedSet object will be instantiated and called as such:

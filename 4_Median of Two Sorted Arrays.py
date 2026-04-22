@@ -1,37 +1,30 @@
 class Solution:
     def findMedianSortedArrays(self, n1: List[int], n2: List[int]) -> float:
+        # Find i and j in n1 and n2 such that n1[i] < n2[j+1]
         # 1. assign n1 the longer array
-        if len(n1) < len(n2): n1, n2 = n2, n1
+        if len(n2) > len(n1): n1, n2 = n2, n1
 
-        # 2. calculate the left-half size (longer if odd total)
-        len1, len2 = len(n1), len(n2)
-        total = len1 + len2
-        left_half = (total + 1) >> 1
+        # 2. calculate the left-half size (+1 if odd total)
+        l1, l2 = len(n1), len(n2)
+        lhalf = (l1 + l2 + 1) // 2
 
-        # 3. mark i, j the last idx of left-half[]
-        # 4. range of i in: [ all_n2_is_left, all_left_in_n1]
-        iL, iR = left_half - len2 - 1, left_half - 1
+        # 3. Binary Search for i in range: [ all_n2_is_left, all_left_in_n1]
+        il, ir = lhalf-l2-1, lhalf-1
+        while il < ir:
+            m = (il + ir + 1) >> 1
+            j = lhalf - m - 2
 
-        while iL < iR:  # [iL, iR]
-            iM = (iL + iR + 1) >> 1
-            j = left_half - iM - 2
+            lmed1 = n1[m] if m >= 0 else -inf
+            rmed2 = n2[j+1] if j+1 < l2 else inf
+            if lmed1 < rmed2: il = m
+            else: ir = m - 1
 
-            lastN1L =  n1[iM] if iM >= 0 else -inf
-            firstN2R = n2[j+1] if j+1 < len2 else inf
+        # 4. return median based on even/odd total
+        i, j = il, lhalf - il - 2
+        lmed1 = n1[i] if i >= 0 else -inf
+        rmed1 = n1[i+1] if i+1 < l1 else inf
+        lmed2 = n2[j] if j >= 0 else -inf
+        rmed2 = n2[j+1] if j+1 < l2 else inf
 
-            # 5. ideal: max(n1[i], n2[j]) < min(n1[i+1], n2[j+1])
-            if lastN1L > firstN2R: iR = iM - 1
-            else: iL = iM
-        
-        # 6. return based on even / odd total
-        i = iL
-        j = left_half - i - 2
-
-        lastN1L =  n1[i] if i >= 0 else -inf
-        lastN2L =  n2[j] if j >= 0 else -inf
-        firstN1R = n1[i+1] if i+1 < len1 else inf
-        firstN2R = n2[j+1] if j+1 < len2 else inf
-        left = max(lastN1L, lastN2L)
-        right = min(firstN1R, firstN2R)
-        
-        return left if total % 2 == 1 else (left + right) / 2
+        lmed, rmed = max(lmed1, lmed2), min(rmed1, rmed2)
+        return lmed if (l1 + l2) % 2 == 1 else (lmed + rmed) / 2
