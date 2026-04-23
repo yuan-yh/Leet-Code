@@ -2,18 +2,17 @@
 
 class Solution:
     def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
-        directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]     # clockwise
-        row, col, i, j, d = len(matrix), len(matrix[0]), 0, 0, 0
+        dirs = [(0, 1), (1, 0), (0, -1), (-1, 0)]
         res = []
+        row, col = len(matrix), len(matrix[0])
+        r = c = d = 0
 
-        for _ in range(row * col):
-            # 1. record & mark as visited
-            res.append(matrix[i][j])
-            matrix[i][j] = None
-            # 2. if out of boundary or visited, turn 90D clockwise
-            nexti, nextj = i + directions[d][0], j + directions[d][1]
-            if (not 0 <= nexti < row) or (not 0 <= nextj < col) or (matrix[nexti][nextj] == None):
-                d = (d + 1) % 4
-            i, j = i + directions[d][0], j + directions[d][1]
-
+        for _ in range(row*col):
+            # update res
+            res.append(matrix[r][c])
+            # mark as visited
+            matrix[r][c] = -inf
+            # explore the next valid position
+            if not (0 <= r + dirs[d][0] < row and 0 <= c + dirs[d][1] < col and matrix[r+dirs[d][0]][c+dirs[d][1]] != -inf): d = (d + 1) % 4
+            r, c = r + dirs[d][0], c + dirs[d][1]
         return res

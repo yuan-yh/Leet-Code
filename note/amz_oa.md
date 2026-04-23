@@ -1,0 +1,10 @@
+GPT:
+maxRentRevenue
+maximumCapacity
+findMinimumSum
+
+Claude:
+sortBugReportFrequencies
+minimumExecutionTime
+topBundle
+secureMaximumDeliveries

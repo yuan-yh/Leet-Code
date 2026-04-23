@@ -1,20 +1,19 @@
 class MinStack:
-    # Keep tracking the valid min-val at the cur stack element
+    # getMin O(1): push (val, cur_min) together
     def __init__(self):
-        self.minStack = [(0, inf)]  # init with (any_val, min)
+        self.record = []
 
     def push(self, val: int) -> None:
-        self.minStack.append((val, min(val, self.minStack[-1][1])))
+        self.record.append((val, min(val, self.record[-1][1] if self.record else inf)))
 
     def pop(self) -> None:
-        self.minStack.pop()
+        self.record.pop()
 
     def top(self) -> int:
-        return self.minStack[-1][0]
+        return self.record[-1][0]
 
     def getMin(self) -> int:
-        return self.minStack[-1][1]
-        
+        return self.record[-1][1]
 
 
 # Your MinStack object will be instantiated and called as such:
