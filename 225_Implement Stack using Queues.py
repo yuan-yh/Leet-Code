@@ -1,20 +1,21 @@
 class MyStack:
-    # only `peek/pop from front` allowed
+    # use queue cycle_loop to simulate stack
     def __init__(self):
         self.q = []
 
     def push(self, x: int) -> None:
         self.q.append(x)
-        # maintain the stack order - most recent on head
-        length = len(self.q)
-        for _ in range(length - 1):
-            self.q.append(self.q.pop(0))
 
     def pop(self) -> int:
+        length = len(self.q)
+        for _ in range(length - 1):
+            self.push(self.q.pop(0))
         return self.q.pop(0)
 
     def top(self) -> int:
-        return self.q[0]
+        target = self.pop()
+        self.push(target)
+        return target
 
     def empty(self) -> bool:
         return len(self.q) == 0
