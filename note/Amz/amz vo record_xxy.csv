@@ -4,43 +4,33 @@
 [1, 3] [2, 5] [6,7] ",,,,,,,,,,,,,,,,,,,
 "510, 一些杂七杂八的+2215",,,,,,,,,,,,,,,,,,,
 波兰表达式 波兰表达式是说1628 用树的还有个1597,,,,,,,,,,,,,,,,,,,
-clone linked list  138 先复制next再复制random再删除吗,,,,,,,,,,,,,,,,,,,
-merge two sorted array ,,,,,,,,,,,,,,,,,,,
 lc 329,,,,,,,,,,,,,,,,,,,
 lc270,,,,,,,,,,,,,,,,,,,
 请问下有些找连同块的题面试官都会让搓并查集对吗？ 有dfs给过的吗union found口述,,,,,,,,,,,,,,,,,,,
 "上午是情景题，故事很丰富，我要从中提取信息识别，开始用了字典和heap，对方不让我用heap,然后我用字典。但是里面很多条件和限制排序的隐私要考虑，字典里面值肯定解决不了。他还让我O1解决",,,,,,,,,,,,,,,,,,,
-rate limiter 和 cycle detection,,,,,,,,,,,,,,,,,,,
  hm面了抓雨水,,,,,,,,,,,,,,,,,,,
 实现一个stack，第二个题是一道怪题raindrops on sidewalk面完查了一下说是谷歌level4面试题，lc里面没有,,,,,,,,,,,,,,,,,,,
 lc56,,,,,,,,,,,,,,,,,,,
-LFU cache是用的OrderedDict 还是自己去定义的双向链表啊 lru 不用ordereddict可以理解 flu也自己定义双向链表吗 自己定义 好 双向链,,,,,,,,,,,,,,,,,,,
 一个tree的题,,,,,,,,,,,,,,,,,,,
-"coding：爬楼梯  dp
-follow up：空间优化",,,,,,,,,,,,,,,,,,,
-course schedule变式,,,,,,,,,,,,,,,,,,,
+"coding：爬楼梯  dp, follow up：空间优化",,,,,,,,,,,,,,,,,,,
 compare version number变式,,,,,,,,,,,,,,,,,,,
 broken calculator + cache 变种,,,,,,,,,,,,,,,,,,,
 Hard LC4的变体,,,,,,,,,,,,,,,,,,,
 leetcode 472 高频hard 472+word break II,,,,,,,,,,,,,,,,,,,
 lc383 Write an algorithm to figure out whether a newspaper has enough letters to create a message,,,,,,,,,,,,,,,,,,,
-最大岛屿面积 LRU Topk course schedule meeting room 买卖股票，打家劫舍,,,,,,,,,,,,,,,,,,,
-jump game和sliding window maximum,,,,,,,,,,,,,,,,,,,
-一个union find(684，547，721?)，一个topk,,,,,,,,,,,,,,,,,,,
+最大岛屿面积 meeting room 买卖股票，打家劫舍,,,,,,,,,,,,,,,,,,,
+jump game,,,,,,,,,,,,,,,,,,,
 波兰表达式 造tree 有个是stack算数的我就记得,,,,,,,,,,,,,,,,,,,
-topk,,,,,,,,,,,,,,,,,,,
-coding是一个自创的题然后考bfs dfs，然后还有一个最近祖先和lru,,,,,,,,,,,,,,,,,,,
-1 岛屿问题 2 字符串匹配（trie 查询次数 和 password check 问题 ,,,,,,,,,,,,,,,,,,,
+coding是一个自创的题然后考bfs dfs，然后还有一个最近祖先,,,,,,,,,,,,,,,,,,,
+字符串匹配（trie 查询次数 和 password check 问题 ,,,,,,,,,,,,,,,,,,,
 统计id list中出现超过一次的id[破涕为笑]再follow up如果id是stream的形式[破涕为笑],,,,,,,,,,,,,,,,,,,
-"第二个是一个bfs,一个dfs Sagemaker 的",,,,,,,,,,,,,,,,,,,
-一个岛屿问题，一个k最大值,,,,,,,,,,,,,,,,,,,
-clone code with random pointer + next pointer,,,,,,,,,,,,,,,,,,,
+一个k最大值,,,,,,,,,,,,,,,,,,,
 "解析log 给定一长串log
 然后要去找log里面的内容
 不是lc
 叫我用bruce force就行",,,,,,,,,,,,,,,,,,,
 water flow shortest path,,,,,,,,,,,,,,,,,,,
-string compression和merge k sorted list,,,,,,,,,,,,,,,,,,,
+string compression,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,
 亞麻常見都寫一個故事，共7個
@@ -67,18 +57,12 @@ project obstacle/difficulty，efficientcy/simplify,,,,,,,,,,,,,,,,,,,
 challenge project,,,,,,,,,,,,,,,,,,,
 delivery result, earn trust",,,,,,,,,,,,,,,,,,,
 out of scope ,,,,,,,,,,,,,,,,,,,
-"其实面ood的时候，多种写法都应该主动讨论一下，rate limiter我主动说了几种解法，并分别讨论了优劣和适用范围
-最后就说在这个题的背景下我觉得xxx比较好
+"
 
-最后面试官说非常impressive[破涕为笑]没想过会把一个问题想得这么深入",,,,,,,,,,,,,,,,,,,
-rate limiter,,,,,,,,,,,,,,,,,,,
-lru,,,,,,,,,,,,,,,,,,,
 Hit counter,,,,,,,,,,,,,,,,,,,
 TinyURL ,,,,,,,,,,,,,,,,,,,
 time based key value store,,,,,,,,,,,,,,,,,,,
 trie,,,,,,,,,,,,,,,,,,,
-leetcode里常考的design题,,,,,,,,,,,,,,,,,,,
-design推特名字改成设计facebook实际还是设计推特 followup问了推特找朋友实际上就是bfs dfs。快速找朋友union find，,,,,,,,,,,,,,,,,,,,
 设计一个系统：input一个日期。return该日期发布的电影；如果没有该日期发布的电影，返回最近日期发布的电影。,,,,,,,,,,,,,,,,,,,
 读file文件输出json(细节需要自己问),,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,
@@ -95,11 +79,8 @@ timetracker,,,,,,,,,,,,,,,,,,,
 "第一梯队
   岛屿 / Union Find / DFS / BFS 
   Top K 
-  Course Schedule 
   LRU / LFU 
-  Clone Random Pointer 
   波兰表达式 / 表达式树 
-  Sliding Window Maximum 
   Jump Game 
   Meeting Room / 区间贪心 
  
@@ -113,7 +94,6 @@ timetracker,,,,,,,,,,,,,,,,,,,
   Climbing Stairs 
   买卖股票 
   打家劫舍 
-  Merge K Sorted List 
   String Compression 
 ","第三梯队
   Rate Limiter 

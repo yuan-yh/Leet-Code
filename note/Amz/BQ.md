@@ -21,6 +21,11 @@ genai 被拷打简历和ai相关概念
 Gen AI: ever used ai to produce code in work or school
 补个genai不太常见的面经：coding做完以后还有点时间，让我share屏幕打开ide现场展示怎么用ai做这道题 我最后prompt就是把问题直接贴进去，写了我的思路，然后写了几个edge case让ai注意…
 
+Draft:
+上来就是顶层设计、架构决策、CLAUDE.md 配置、规范驱动开发——先把“怎么让 AI 听你话”这件事讲透。
+然后一行一行代码带着你搭，后端骨架、前端工程、基础组件，
+再到核心功能交付，最后容器化部署、可观测性、复盘。
+
 4. **Conflict / Disagreement** — A time you had a conflict, disagreement, or different opinion with a teammate or stakeholder | 23 |
 
 ## Tier 2: High Frequency
