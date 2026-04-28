@@ -2,29 +2,75 @@
 
 | # | Topic | Count |
 |---|-------|-------|
-| 1 | **Rate Limiter** | 2 |
+| 1 | **Rate Limiter** | 359 (Logger Rate Limiter), 362 (Design Hit Counter), 346 (Moving Average from Data Stream), LC 239 (Sliding Window Maximum), **LC 480 (Sliding Window Median)** |
 其实面ood的时候，多种写法都应该主动讨论一下，rate limiter我主动说了几种解法，并分别讨论了优劣和适用范围
 最后就说在这个题的背景下我觉得xxx比较好
+This is about designing a system that limits how many requests a user/client can make within a time window. Key approaches include sliding window, token bucket, and fixed window counters.
 
 | 2 | **LRU / LFU Cache** | LC 146, 460 | 4 |
 LFU cache是用的OrderedDict 还是自己去定义的双向链表啊 lru 不用ordereddict可以理解 flu也自己定义双向链表吗 自己定义 好 双向链
 
 | 3 | **Log Parsing / Processing** — Parse logs, find common entries across logs, brute force | LC 560 variant, custom | 3 |
 log处理（两份log，找到同时出现在两个log里and浏览了不同的网站的人）
-similar to LC635, with timestamp
-
 给定一长串log, 然后要去找log里面的内容
 一开始没想bruce force, 我先跟他讨论我的approach 讨论完才开始写
 讨论到一半说可以线段树做 但会写不完 我BQ完只剩25分钟coding吧
 
 修日志是在日志里找他家那个服务器坏了
 
-| 3 | **Hit Counter** | 1 |
+Based on your notes, this involves parsing timestamped logs, finding entries common across two logs with additional filtering conditions, and potentially interval/range queries. It touches on hashmap lookups, set intersection, sorting, and sometimes segment trees for range queries.
+
+Practice these: 
+LC 635 (Design Log Storage System — directly relevant with timestamp ranges), 
+LC 560 (Subarray Sum Equals K — prefix sum pattern useful for log aggregation), 
+LC 1604 (Alert Using Same Key-Card Three or More Times — log grouping + time window), 
+LC 253 (Meeting Rooms II — interval processing on timestamps), 
+LC 349/350 (Intersection of Two Arrays I & II — the "find common entries" pattern), 
+LC 588 (Design In-Memory File System — parsing structured string inputs), 
+LC 937 (Reorder Data in Log Files — log parsing and custom sorting).
+
+| 7 | **Design Twitter/Facebook** (BFS/DFS + Union Find follow-up) | 1 |
+design推特名字改成设计facebook实际还是设计推特 followup问了推特找朋友实际上就是bfs dfs。快速找朋友union find
+
+The base problem is designing a social feed system (post, follow, get newsfeed). The follow-up about "quickly finding friends" is essentially connected components or shortest path in a social graph.
+Practice these: L
+C 355 (Design Twitter — the exact base problem), 
+LC 547 (Number of Provinces — Union Find on a social graph), 
+LC 323 (Number of Connected Components — Union Find fundamentals), 
+LC 127 (Word Ladder — BFS shortest path, analogous to degrees of separation), 
+LC 863 (All Nodes Distance K in Binary Tree — BFS from a node at distance K), 
+LC 1101 (The Earliest Moment When Everyone Become Friends — Union Find with timestamps), 
+LC 684 (Redundant Connection — Union Find edge case handling).
+
+| 14 | **Parking Lot** | 1 |
+1. s-s m-m l-l
+2. track id
+3. s-s,m,l m-m,l, l-l
+4. 没ticket会怎么样
+
+| 15 | **设计车牌号** | 1 |
+DMV design system issue plate number
+Map<String, String> vinToPlateMap stores;
+6-digit plate number
+def issuePlate(VIN: String) -> String
+example: 00040 to 000014
+
+| 16 | **Player / Hit COunter??** | 1 |
+设计一个系统，可以在某个时间点注册 callback，当播放进度更新时，触发对应时间点的 callback。- chat根据code整理出来的题目 应该是有出入的
+重点在data structure
+Me:
+treemap-heap-minheap
+map-Binary search
+时间复杂度 ologn
+中途还出现要用箭头函数的东西
+| 17 | **Play Carrd** | 1 |
+![alt text](828970109782197695.jpg)
+code follow:如果是600张卡片怎么办 不考虑其他的情况下 这个也可以么
+先for花和先for数字有什么区别么
+
 | 4 | **TinyURL** | 1 |
 | 5 | **Time-Based Key-Value Store** | 1 |
 | 6 | **Trie** | 1 |
-| 7 | **Design Twitter** (renamed to Design Facebook but same problem; BFS/DFS + Union Find follow-up) | 1 |
-design推特名字改成设计facebook实际还是设计推特 followup问了推特找朋友实际上就是bfs dfs。快速找朋友union find
 
 | 8 | **Movie Lookup by Date** (return movie on a given date, or nearest date) | 1 |
 | 9 | **File Parser** — Read file and output JSON | 1 |
@@ -32,6 +78,7 @@ design推特名字改成设计facebook实际还是设计推特 followup问了推
 | 11 | **Time Tracker** | 1 |
 | 12 | **Design HashMap** | LC 706 | 1 |
 | 13 | **Voting System** — OOD for a voting / election mechanism | 1 |
+| 18 | **coding 手搓路径** | LC 71 + LC 588  |
 
 ---
 ## Part 1: Coding / Algorithm Questions
@@ -41,7 +88,7 @@ ListNode.__lt__ = lambda self, other : (self.val < other.val)
 
 | # | Topic | Related LeetCode | Count |
 |---|-------|-----------------|-------|
-| 1 | **Island Problems / DFS / BFS / Union Find / Clone Graph** — Connected components, max island area, graph traversal, clone graph | LC 200, 695, 684, 547, 721, 133 | 10 |
+| 1 | **Island Problems / DFS / BFS / Union Find** / Clone Graph — Connected components, max island area, graph traversal, clone graph | LC 200, 695, 684, 547, 721, 133 | 10 |
 | 2 | **Top K Elements** — Find k-th largest, top k frequent, kth smallest in BST | LC 215, 347, *230* | 7 |
 | 3 | **Course Schedule (Topological Sort)** — Variants, log-file input variants | LC 207, 210 | 6 |
 Course schedule加了amazon背景 follow up return all cycles 
@@ -51,7 +98,7 @@ Course schedule加了amazon背景 follow up return all cycles
 | 6 | Clone Linked List with Random Pointer | LC 138 | 3 |
 | 9 | Merge Sorted Arrays / Lists — Merge two sorted arrays, merge k sorted lists | LC 88, 23 | 3 |
 | 10 | **Word Find** |  |  |
-union find(684，547，721?)
+union find(547，**684，721**?)
 
 ### Tier 2: High Frequency
 

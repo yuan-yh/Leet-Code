@@ -6,15 +6,20 @@
 ### Deep Dive
 A time you had to deep dive into a problem or topic / find the root cause / analyze a bug + 追问拷打
 建議有在準備的好好想一下，這題比較像你解決一個bug 或是 service 壞掉，你怎麼找到root cause
-
+dive deep root cause wasn't obvious problem, but you found out -> follow-up: how do you find that out
+follow up- dive deep：怎么弄优先级 如果你已经弄了12task 还剩34怎么办
 ### Tight Deadline
 2. **Tight Deadline** — How you handled a tight deadline or delivered under time pressure / 没有完成的情况 | 24 |
+Follow-up: 花了多长时间交付 是否做出牺牲
 
 ### Gen AI
 3. **Gen AI** 
+ever used ai to produce code in work or school
 - Have you used AI / GenAI to boost *productivity* in work or school? How exactly? | 23 |
 - GenAI questions can go very deep: interviewers may ask about specific tools, workflow, AI vs. traditional AI differences, and one candidate was asked to **live demo** how they use AI to solve a coding problem on a shared screen.
-- 无法完成task的情况
+- 无法完成task的情况 / gen-ai mistake
+ai：使用了什么ai（区别之类的），ai的信任程度？ 怎么使用ai
+
 中間還有簡單問了一點八股，確認大概理解 Heap 定義跟 gen AI 和傳統 AI 差異
 提供一个经历攒人品吧，最开始问的Gen AI,我说我在open source里用AI加快我开发速度，然后就被打断了开始问我那个project的架构，怎么处理细节， 一直问到结束，所以确实可能会被拷打
 genai 被拷打简历和ai相关概念
@@ -27,12 +32,18 @@ Draft:
 再到核心功能交付，最后容器化部署、可观测性、复盘。
 
 4. **Conflict / Disagreement** — A time you had a conflict, disagreement, or different opinion with a teammate or stakeholder | 23 |
+还问了一个pushback好像所以用的conflict 当时我没听懂pushback是什么 但其他句子听起来像是有矛盾？
 
 ## Tier 2: High Frequency
 
 5. **Harsh / Negative / Tough Feedback** — A time you received harsh or negative feedback and how you dealt with it | 13 |
 
 6. **Challenging Project / Complex Problem** — Describe a challenging project or complex problem you worked on | 12 |
+
+7. **Help Peers**
+探探你可能与同事的一些互动，告诉我有一次你决定介入并提供帮助
+follow up-你是怎么决定介入并且help的
+从长远来看 你有帮助他们么，在解决这个事情以后 他们有什么提升么
 
 ## Tier 3: Moderate Frequency
 
