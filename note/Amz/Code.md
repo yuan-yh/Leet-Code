@@ -80,8 +80,8 @@ ListNode.__lt__ = lambda self, other : (self.val < other.val)
 |---|-------|-----------------|-------|
 | 1 | **Island Problems / DFS / BFS / Union Find** / Clone Graph — Connected components, max island area, graph traversal, clone graph | LC 200, 695, 684, 547, 721, 133 | 10 |
 | 2 | **Top K Elements** — Find k-th largest, top k frequent, kth smallest in BST | LC 215, 347, *230* | 7 |
-| 3 | **Course Schedule (Topological Sort)** — Variants, log-file input variants | LC 207, 210 | 6 |
-Course schedule加了amazon背景 follow up return all cycles 
+| 3 | Course Schedule (Topological Sort) — Variants, log-file input variants | LC 207, 210 | 6 |
+Course schedule加了amazon背景 **follow up return all cycles**
 
 | 7 | **Polish Notation / Expression Tree** — Evaluate or build expression tree | LC 1628, 1597, 150 | 3 |
 | 5 | House Robber / DP on Arrays — Cannot rob adjacent, **tree DP variants** | LC 198, 213 | 3 |
