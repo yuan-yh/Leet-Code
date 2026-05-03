@@ -36,11 +36,12 @@ Flight:
 Date: May 06
 - Confirmation Number: J5FSTL
 - eTicket number: 0162399293770
+- Booking ID: 9865415321
 United Airlines flight: 
 - UA755: Seattle, WA, US (SEA) to Washington, DC, US (IAD)
-01:07 PM -> 09:16 PM
+01:07 PM -> 09:16 PM; 5 Hours 9 Minutes
 - UA3459: Washington, DC, US (IAD) to Portland, ME, US (PWM)
-10:10 PM -> 11:59 PM
+10:10 PM -> 11:59 PM; 1 Hours 49 Minutes
 
 --
 
