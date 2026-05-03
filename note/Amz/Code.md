@@ -108,6 +108,8 @@ union find(547，**684，721**?)
 | # | Topic | Related LeetCode | Count |
 |---|-------|-----------------|-------|
 | 19 | Valid Parentheses (with noise characters) | LC 20 variant | 1 |
+coding: input是array ["5000 jobs.amazon.com", "2000 amazon.com"] 目标是统计所有subdomain traffic count value
+parenthesis matching类似问题
 | 20 | LC 329 — Longest Increasing Path in a Matrix | LC 329 | 1 |
 | 21 | LC 270 — Closest Binary Search Tree Value | LC 270 | 1 |
 | 22 | LC 56 — Merge Intervals | LC 56 | 1 |

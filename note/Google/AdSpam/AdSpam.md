@@ -1,4 +1,11 @@
 ## Email Info
+3-min -> half swe half data enineer
+sql
+signal building
+ML / Python
+residential proxy
+
+
 30-minute team match call
 Manager: Arda
 Location: Mountain View, CA 94043
@@ -10,6 +17,7 @@ AdSpam, externally known as the Ad Traffic Quality group, is part of the Ads Pri
 We are a diverse group of engineers, analysts, product & program managers, and researchers, collaborating cross-functionally to tackle complex, large-scale problems in the fight against invalid traffic (IVT). We work on some of the largest data sets in the world, build sophisticated detection systems, and apply state-of-the-art ML models. AI/Agent technologies are crucial in helping us scale our defenses and stay ahead of constantly evolving attacks.
 
 ## 1. Team's Background
+arda atali
 
 **Invalid Traffic (IVT)**: 来自不真正有兴趣的用户的activity
 

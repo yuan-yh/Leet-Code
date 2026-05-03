@@ -91,7 +91,7 @@ Our team was building a trading platform for college football players — like a
 Coaches and team staff could browse and buy players to customize their roster, and we would provide suggested prices evaluated based on real game performance.
 
 When I joined, the team was transitioning to a new external data source due to commercial license issue. 
-My role was to redesign the database, build the data pipeline, and develop backend API. I will describe in three points.
+My role was to redesign the database, build the data pipeline, and develop backend API, which I will walk through in three points.
 
 First, I restructured the database schema. 
 The original design was fairly flat: player identity info like name and birthday was mixed with season-dependent data like position and jersey number. 
@@ -115,6 +115,8 @@ This experience gave me a much deeper understanding of data modeling trade-offs 
 ---
 
 ### Follow-ups
+> After the data ingestion, how do you check the database to make sure all ingested correctly?
+
 #### 1. Schema Design Trade-offs
 
 *"You mentioned separating player identity from season stats. What were the trade-offs of that split? Did it make anything harder or slower compared to the original flat design?"*
