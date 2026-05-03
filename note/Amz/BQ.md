@@ -7,26 +7,34 @@
 ### 1. Deep Dive
 A time you had to deep dive into a problem or topic / find the root cause / analyze a bug + 追问拷打
 建議有在準備的好好想一下，這題比較像你解決一個bug 或是 service 壞掉，你怎麼找到root cause
-dive deep root cause + follow up
 dive deep root cause wasn't obvious problem, but you found out -> follow-up: how do you find that out
 follow up- dive deep：怎么弄优先级 如果你已经弄了12task 还剩34怎么办
 
+The key is to show how do you find the root cause.
 
 > Story 1: The Idempotency Bug (from your 2Wind internship)
-Situation: At 2Wind, I was building an ingestion pipeline to migrate 16K+ player profiles and 72K+ game stats into PostgreSQL. After running the pipeline multiple times during development, I noticed the record count kept growing — the pipeline wasn't idempotent even though it used upsert logic with a unique constraint.
-情况：在2Wind，我正在构建一个导入流水线，将16K+的玩家档案和72K+的游戏统计数据迁移到PostgreSQL。在开发过程中多次运行流水线后，我注意到记录数量持续增长——尽管流水线使用了带有唯一约束的上溢逻辑，但流水线并非幂等型。
+Situation: At 2Wind, I was building an ingestion pipeline to ingest football player’s seasonal data into PostgreSQL. After running the pipeline for 2025 during development environment, I noticed some players have multiple season aggregates for the same year. The season aggregates are like year summary, which should only exists one per year.
+That means, the pipeline wasn't idempotent even though it used upsert logic with a unique constraint.
 
-Task: I needed to find out why the upsert was inserting duplicates instead of updating existing records, and fix it so the pipeline could be safely rerun at any time.
-任务：我需要弄清楚为什么upsert会插入重复记录而不是更新现有记录，并修复它，以便流水线可以随时安全重启。
+Task: 
+Soon as I realized, I bring it up in the tech drop in meeting to notify tech teams. Mentor asked to prioritize and fully look in, fix the pipeline to preserve data integrity, as our main product depends on those accurate game data..
 
-Action: I didn't assume it was a simple bug in the code. Instead, I examined the actual data that was being duplicated. I found two distinct failure modes. First, when a player transferred mid-season, their team ID changed, so the unique constraint (which included team ID) couldn't match the existing row — it created a new one instead of updating. Second, the pipeline stored both per-game stats and season-level aggregates, but the constraint didn't include game_id, so those two record types could silently overwrite each other. I also discovered a PostgreSQL-specific subtlety: season aggregates had NULL in the game_id field, and by default PostgreSQL treats NULL ≠ NULL, so two season aggregates for the same player wouldn't conflict — they'd both get inserted. I used PostgreSQL 15's NULLS NOT DISTINCT feature to close that gap. My fix was to replace team_id with game_id in the unique constraint, which cleanly separated per-game rows from aggregate rows and removed the dependency on a value that changes with transfers.
-动作场面：我没以为只是代码里的简单bug。相反，我检查了被复制的实际数据。我发现了两种截然不同的失败模式。首先，当球员赛季中途转会时，他们的球队ID发生了变化，因此唯一约束（包括球队ID）无法匹配现有的行——它创建了一个新的行，而不是更新。其次，流水线存储的是每场比赛统计和赛季层级的总数据，但约束不包含game_id，因此这两种记录类型可以悄无声息地覆盖对方。我还发现了一个 PostgreSQL 特有的细节：赛季聚合在game_id字段中是 NULL，而默认情况下 PostgreSQL 会把 NULL 处理成 ≠NULL，所以同一玩家的两个赛季聚合不会冲突——它们都会入。我用了PostgreSQL 15的功能来弥补这个差距。我的解决方法是用独特约束中的game_id替换team_id，这样可以干净利落地将每局的行和聚合行分开，并且消除了对随转移变化值的依赖。
+Action: 
+To begin with, I first checked those duplicated data,and found two distinct failure modes. 
+First, when a player transferred mid-season, their team ID changed, so the unique constraint (which included team ID) couldn't match the existing row — it created a new one instead of updating. 
+Second, the pipeline stored both per-game stats and season-level aggregates, which was identified by the game_id field. However, the constraint didn't include game_id, so those two record types could silently overwrite each other. 
+I also discovered a PostgreSQL-specific issue: season aggregates had NULL in the game_id field, and by default PostgreSQL treats NULL ≠ NULL, so two season aggregates for the same player wouldn't conflict — they'd both get inserted. 
 
-Result: After the fix, the pipeline became fully idempotent — rerunning it produced zero duplicates and zero data loss. This was critical because player data directly drove the price valuations that were the core product.
-结果：修复后，流水线完全变为幂等——重运行后没有重复，也没有数据丢失。这至关重要，因为玩家数据直接影响了核心产品价格估值。
+Once I discover those three causes, I had a quick sync with mentor, he suggested that the postgres issue can be solved by leveraging PostgreSQL 15's NULLS NOT DISTINCT feature, and we discussed with the team lead to determine it is ok to modify old constraint.
 
-Learn: I learned that idempotency bugs often hide in the assumptions behind your unique constraints, not in the application code. Now when I design any upsert logic, I start by asking "which fields in this constraint could change over time?" and "are there NULLs that need special handling?
-学习：我了解到幂等性错误往往隐藏在你独特约束背后的假设中，而不是应用代码本身。现在，当我设计任何upsert逻辑时，我都会先问“这个约束中哪些字段会随着时间变化？”以及“是否有需要特殊处理的NULLs？
+For the unique constraint, I replaced team_id with game_id, which cleanly separated per-game rows from aggregate rows and allowed the tool to track a player’s career history in a more reasonable way.
+
+Result: After the fix, the pipeline became fully idempotent — rerunning it produced no duplicates or data loss. This was critical because player data directly drove the price evaluations, which was the main idea of this product.
+
+Learn: 
+From this experience, I learned that idempotency bugs often hide in the assumptions behind your unique constraints. Now when I design any upsert logic, I always invoke myself: "which fields in this constraint could change over time?" and "are there NULLs that need special handling?
+Also it is important to seek help from others to unblock ourselves.
+
 
 > Q1: "How did you actually find the root cause? Did you run SQL queries, look at logs, or what?"
 Yes, it started with a simple count query. After running the pipeline twice, I ran something like SELECT player_id, season, COUNT(*) FROM stats GROUP BY player_id, season HAVING COUNT(*) > 1 to find duplicated rows. That gave me a list of players with duplicates. Then I pulled the full rows for a few of those players and compared them side by side — same player, same season, but different team IDs. That's when it clicked: these were transfer players. The team_id was part of the unique constraint, so when it changed, the upsert treated it as a new record.
@@ -82,11 +90,16 @@ Q6：“你怎么弄优先级？如果你已经弄了一半的任务还剩一半
 2. **Tight Deadline** — How you handled a tight deadline or delivered under time pressure / 没有完成的情况 | 24 |
 Follow-up: 花了多长时间交付 是否做出牺牲
 
-Situation: During my startup internship, we needed to deliver a full-stack MVP for a sports player tax filing platform. The catch was we only had one week — the product had to go live before tax season started, because our credibility with both customers and partner banks depended on launching on time. Missing the window meant losing an entire season of business.
-Task: As the primary developer, I was responsible for building and shipping the working MVP within that one-week window.
-情况：在我的创业实习期间，我们需要为体育运动员报税平台交付一款全栈MVP。关键是我们只有一周时间——产品必须在报税季开始前上线，因为我们在客户和合作银行中的信誉取决于按时发布。错过窗口意味着失去整整一个季度的生意。
-Action: I started by listing every feature the stakeholders had requested, then sat down with my manager to ruthlessly prioritize. We identified three core features that would make the product usable — user registration, document upload, and a basic tax summary dashboard — and explicitly deferred nice-to-haves like notifications and analytics. Next, I talked with my mentor and discovered we had reusable authentication and file-upload modules from a previous internal project, which saved roughly two days of work. I set up daily standups (even though the team was small) so blockers surfaced within hours instead of days. I also made an architectural tradeoff: instead of building a custom backend API for everything, I used Firebase for auth and storage so I could focus my time on the business logic and frontend. By day five I had a working version deployed, and we spent the last two days doing live testing with a pilot user.
-任务：作为主要开发者，我负责在一周内构建并发布可用的MVP。
+Situation: During my startup internship, we needed to deliver a full-stack MVP for a sports player tax filing platform. The catch was we only had two weeks — the product had to go live before tax season started to gain confidence from both customers and partner banks.
+
+Task: As a full-stack developer, I was responsible for building and shipping the working MVP within that two-week window.
+
+Action: 
+I started by listing every feature the stakeholders had requested, then sat down with my manager to ruthlessly prioritize. 
+We identified three core features that would make the product usable — user registration, document upload, and a basic tax summary dashboard — and explicitly deferred nice-to-haves like notifications and analytics. 
+Next, I talked with my mentor and discovered we had reusable authentication and file-upload modules from a previous internal project, which saved roughly two days of work. 
+I set up daily standups (even though the team was small) so blockers surfaced within hours instead of days. 
+I also made an architectural tradeoff: instead of building a custom backend API for everything, I used Supabase for auth and storage so I could focus my time on the business logic and frontend. By day five I had a working version deployed, and we spent the last two days doing live testing with a pilot user.
 动作场面：我先列出了利益相关者要求的每一个功能，然后和经理坐下来严格优先排序。我们确定了三个核心功能，使产品可用——用户注册、文件上传和基础税务摘要仪表盘——并明确推迟了通知和分析等“可有”功能。接着，我和导师聊过，发现我们有之前内部项目的可复用认证和文件上传模块，节省了大约两天的工作时间。我安排了每日站立会议（尽管团队很小），所以阻碍者几小时内就能出现，而不是几天。我还做了一个架构上的权衡：没有为所有东西构建自定义后端 API，而是用 Firebase 来做认证和存储，这样我可以把时间集中在业务逻辑和前端上。到了第五天，我已经部署了一个可用的版本，最后两天我们用试点用户进行了实时测试。
 Result: We launched on time before tax season. The pilot customer successfully uploaded their documents and the partner bank confirmed the integration worked. The on-time delivery helped the startup close its next round of user partnerships.
 结果：我们在报税季前按时启动。试点客户成功上传了他们的文件，合作银行也确认了集成成功。准时交付帮助初创公司完成了下一轮用户合作。

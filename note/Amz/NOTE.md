@@ -1,6 +1,3 @@
-Check-in and asks for May 05 ticket time change
----
-
 Yutika Yong
 Date: MAY 04, 2026
 Interview Address: 2250 7th Ave Seattle WA, 98121
@@ -16,27 +13,7 @@ Address: 808 Howell StSeattle, WA, US
 Hotel Confirmation Code: 151162RA071543
 Phone: +1 206 9731234
 
-Flight: 
-Date: May 03
-United Airlines flight: 
-- UA840 from Portland, US (PWM) to Chicago, US (ORD)
-Departure: 09:00 AM -> 10:56 AM; 2 Hours 56 Minutes; 25D
-- UA1660 from Chicago, US (ORD) to Seattle, US (SEA)
-Departure: 01:10 PM -> 03:48 PM; 4 Hours 38 Minutes; 25F
-- Airline Confirmation Code: MQNJS5
-- Booking ID: 6351581789
-
-Date: May 05
-United Airlines flight: 
-- UA747 from Seattle, US (SEA) to Chicago, US (ORD)
-Departure: 10:52 AM -> 05:05 PM; 4 Hours 13 Minutes; 26C
-- UA1027 from Chicago, US (ORD) to Portland, US (PWM)
-Departure: 05:56 PM -> 09:19 PM; 2 Hours 23 Minutes; 22D
-- Airline Confirmation Code: J5FSTL
-- Booking ID: 9865415321
-
 ---
-
 Yashvi Yu
 Date: Tuesday, May 5
 Location: SEA33 - Blackfoot
@@ -53,7 +30,20 @@ Address: 2200 Fifth Avenue, Seattle, WA, US
 Phone: 1-206-4419785
 Hotel Confirmation Code: 40433SG181507
 
+-----
+
 Flight: 
+Date: May 06
+- Confirmation Number: J5FSTL
+- eTicket number: 0162399293770
+United Airlines flight: 
+- UA755: Seattle, WA, US (SEA) to Washington, DC, US (IAD)
+01:07 PM -> 09:16 PM
+- UA3459: Washington, DC, US (IAD) to Portland, ME, US (PWM)
+10:10 PM -> 11:59 PM
+
+--
+
 Date: May 04
 United Airlines flight: 
 - UA840 from Portland, US (PWM) to Chicago, US (ORD)
@@ -71,3 +61,11 @@ Departure: 08:10 AM -> 04:22 PM; 5 Hours 12 Minutes; 22D
 Departure: 05:10 PM -> 07:04 PM; 1 Hours 54 Minutes; 11C
 - Airline Confirmation Code: I11DLV
 - Booking ID: 9749412796
+
+----
+Payment:
+May 03
+YOUR RIDE TO 40 INTERNATIONAL PKWY ON MAY 3, 2026 AT 8:07 AM
+Thanks for riding with Gabriel
+
+Airport: MacDonald
