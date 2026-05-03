@@ -7,7 +7,8 @@ Interview Address: 2250 7th Ave Seattle WA, 98121
 Link: https://livecode.amazon.jobs/joinsession/37d53265-a2fe-4bda-801f-2eeed6810862
 
 2:45 PM - 3:45 PM; Xuefei Zhou
-3:45 PM - 4:45 PM; Sherif Alhawary
+- 数据建模、分区策略和查询灵活性
+3:45 PM - 4:45 PM; Sherif Alhawary (Senior)
 
 Hotel: Hyatt Regency Seattle
 Time: Sun, May 03, 2026; 04:00 PM -> Tue, May 05, 2026; 11:00 AM
@@ -41,7 +42,7 @@ Date: Tuesday, May 5
 Location: SEA33 - Blackfoot
 Address: 1918 8th Ave Ste 400 Seattle WA, 98101
 
-2:00pm - 3:00pm; John Beaver
+2:00pm - 3:00pm; John Beaver (Manager)
 3:00pm - 4:00pm; Yazan Alrawashdeh; Alan Chang (shadow)
 
 Link: https://livecode.amazon.jobs/joinsession/83c55241-4fd9-4a2c-9961-4d21209aac13
