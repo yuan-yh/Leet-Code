@@ -45,28 +45,15 @@ United Airlines flight:
 
 --
 
-Date: May 04
-United Airlines flight: 
-- UA840 from Portland, US (PWM) to Chicago, US (ORD)
-Departure: 09:00 AM -> 10:56 AM; 2 Hours 56 Minutes; 28C
-- UA1660 from Chicago, US (ORD) to Seattle, US (SEA)
-Departure: 01:10 PM -> 03:48 PM; 4 Hours 38 Minutes; 14E
-- Airline Confirmation Code: I11DLV
-- Booking ID: 9749412796
-
-Date: May 06
-United Airlines flight: 
-- UA2851 from Seattle, US (SEA) to Washington, US (IAD)
-Departure: 08:10 AM -> 04:22 PM; 5 Hours 12 Minutes; 22D
-- UA3556 from Washington, US (IAD) to Portland, US (PWM)
-Departure: 05:10 PM -> 07:04 PM; 1 Hours 54 Minutes; 11C
-- Airline Confirmation Code: I11DLV
-- Booking ID: 9749412796
+Cancel Flight:
+Credit $530.60
+To Future flight credit
+Please use confirmation number I11DLV to return to this canceled reservation in My Trips and make changes for a future trip. Change fees may apply for international flights originating outside of the United States. Begin travel by: Apr 30, 2027.
 
 ----
 Payment:
 May 03
-YOUR RIDE TO 40 INTERNATIONAL PKWY ON MAY 3, 2026 AT 8:07 AM
-Thanks for riding with Gabriel
-
-Airport: MacDonald
+Lyft to PWM
+Food: Airport: MacDonald
+Lyft to hotel
+Food: Din Tai Fung Order
