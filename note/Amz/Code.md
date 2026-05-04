@@ -60,8 +60,6 @@ code follow:如果是600张卡片怎么办 不考虑其他的情况下 这个也
 
 | 4 | **TinyURL** | 1 |
 | 5 | **Time-Based Key-Value Store** | 1 |
-| 6 | **Trie** | 1 |
-
 | 8 | **Movie Lookup by Date** (return movie on a given date, or nearest date) | 1 |
 | 9 | **File Parser** — Read file and output JSON | 1 |
 | 10 | **Locker System** — Given dimensions, find the smallest-volume locker that fits | 1 |
