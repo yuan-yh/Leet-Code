@@ -1,19 +1,3 @@
-Yutika Yong
-Date: MAY 04, 2026
-Interview Address: 2250 7th Ave Seattle WA, 98121
-Link: https://livecode.amazon.jobs/joinsession/37d53265-a2fe-4bda-801f-2eeed6810862
-
-2:45 PM - 3:45 PM; Xuefei Zhou
-- 数据建模、分区策略和查询灵活性
-3:45 PM - 4:45 PM; Sherif Alhawary (Senior)
-
-Hotel: Hyatt Regency Seattle
-Time: Sun, May 03, 2026; 04:00 PM -> Tue, May 05, 2026; 11:00 AM
-Address: 808 Howell StSeattle, WA, US
-Hotel Confirmation Code: 151162RA071543
-Phone: +1 206 9731234
-
----
 Yashvi Yu
 Date: Tuesday, May 5
 Location: SEA33 - Blackfoot
@@ -57,3 +41,21 @@ Lyft to PWM
 Food: Airport: MacDonald
 Lyft to hotel
 Food: Din Tai Fung Order
+May 04
+Lyft to Amazon building
+
+---
+Yutika Yong
+Date: MAY 04, 2026
+Interview Address: 2250 7th Ave Seattle WA, 98121
+Link: https://livecode.amazon.jobs/joinsession/37d53265-a2fe-4bda-801f-2eeed6810862
+
+2:45 PM - 3:45 PM; Xuefei Zhou
+- 数据建模、分区策略和查询灵活性
+3:45 PM - 4:45 PM; Sherif Alhawary (Senior)
+
+Hotel: Hyatt Regency Seattle
+Time: Sun, May 03, 2026; 04:00 PM -> Tue, May 05, 2026; 11:00 AM
+Address: 808 Howell StSeattle, WA, US
+Hotel Confirmation Code: 151162RA071543
+Phone: +1 206 9731234
