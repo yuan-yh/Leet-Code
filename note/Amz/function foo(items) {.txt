@@ -1,0 +1,88 @@
+function foo(items) {
+  var i;
+  for (i = 0; i < items.length; i++) {
+    alert("Welcome To LiveCode " + items[i]);
+  }
+}
+
+==
+file search API
+find file (size)
+find file (name) # no duplicates
+all xml files -> folder structure (tree)
+>5gb
+
+isDirectory()
+listFiles()
+getName()
+getSize()
+
+class Solution:
+    def __init__(self, folder):
+        # TODO:validate later
+        self.folder = folder if isDirectory(folder) else None
+    
+    def findSize(self, size: int, oper):
+        def dfs(fold):
+            #end case
+            # if not isDirectory(fold): return
+        
+            nonlocal size, res
+            # process all files/dir inside
+            for f in listFiles(fold):
+                if isDirectory(f): dfs(f)
+                else:
+                    if getSize(f) > size: res.append(f)
+        # validate size
+        res = []
+        
+        
+        enum oper:
+            case ">": return lambda x, y : x > y
+        
+        
+        
+        if self.folder != None: dfs(self.folder)
+        return res
+
+
+
+
+Design & implement a LoggerRateLimit system that receives messages with timestamps and returns whether the message should be printed.
+The system should follow these rules:
+
+- Each unique message can only be printed at most every 10 seconds
+- If a message arrives and it's been 10 seconds since it was last printed, it should be printed
+- Given a message and timestamp, return true if the message should be printed, false otherwise
+- You need to support querying what messages were printed in a given time range
+
+Examples:
+logger.shouldPrintMessage(1, "foo"); // return true, print "foo"
+logger.shouldPrintMessage(2, "bar"); // return true, print "bar"
+logger.shouldPrintMessage(3, "foo"); // return false, don't print "foo"
+logger.shouldPrintMessage(11, "foo"); // return true, print "foo"
+logger.getMessagesPrintedInRange(1, 5); // return ["foo", "bar"]
+
+
+class Solution:
+    def __init__(self):
+        self.next_avil = {}    # key: word, val: next_available_time
+        self.print_record = SortedList()
+    
+    def shouldPrintMessage(self, timestamp: int, word):
+        if word in self.next_avil:
+            if self.next_avil[word] > timestamp: return False
+        self.next_avil[word] = timestamp + 10
+        self.print_record.add((timestamp, word))
+        return True
+    
+    def getMessagesPrintedInRange(self, start, end):
+        res = []
+        l = bisect_left((start, ""))    #inclusive
+        r = bisect_right((right+1, "")) #exclusive
+        for i in range(l, r, 1):
+            res.append(self.print_record[i][1])
+        return set(res)
+        
+na: "foo" - 21, bar - 12
+pr: (1, "foo"), (2, bar), (11, "foo")

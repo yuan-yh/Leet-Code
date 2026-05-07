@@ -15,13 +15,13 @@ The key is to show how do you find the root cause.
 **Situation:**
 During my previous internship, the team was building a trading platform for college football players where prices are driven by real game data. 
 I was working on ingesting player's seasonal data into PostgreSQL through an ingestion pipeline. 
-After running the pipeline for a small group of college teams during dev environment, I noticed some players had multiple season aggregates for the same year. 
+However, after rerunning the pipeline for a small group of college teams during dev environment, I noticed some players had multiple season aggregates for the same year. 
 Season aggregates are like a year summary — there should only be one per player per year. 
 And that meant the pipeline wasn't idempotent even though it used the upsert logic with a unique constraint.
 
 **Task:**
 Soon as I realized, I notified the team. 
-My mentor confirmed this should be top priority, so I took full ownership of diagnosing and fixing the pipeline, as our main product depends on accurate game data.
+My mentor confirmed this should be top priority, so I decided to take full ownership of diagnosing and fixing the pipeline, as our main product depends on accurate game data.
 
 **Action:**
 I started by running queries to find all players with more than one season aggregate for the same year. 
@@ -44,7 +44,7 @@ This was critical because player data directly drove the price evaluations at th
 **Learn:**
 From this experience, I learned that mistakes are often hide in the assumption, and it is important to challenge those preset assumptions.
 Now when I design any upsert logic, I always test the assumption first: which fields in the constraint could change over time? Are there edge cases like NULLs that break the guarantee? 
-That pattern helped me catch a similar issue in another table during other project.
+That pattern helped me catch a similar issue in other projects.
 
 Also, my mentor’s suggestion saved me hours of debugging, which taught me that reaching out early is faster than working hard alone.​​​​​​​​​​​​​​​​
 
@@ -273,14 +273,22 @@ Learn: I learned that engineering efficiency isn't just about how fast you code 
 
 ### 6. **Challenging Project / Complex Problem** — Describe a challenging project or complex problem you worked on | 12 |
 obstacle：第一个故事比较technical，问了followup，后续又讲了一个interpersonal skill的故事
-情况：我曾在一个团队实习，开发了一个为大学橄榄球运动员打造的交易平台——本质上是一个体育股票市场，教练可以浏览、购买并根据真实比赛表现数据定制阵容。我加入时，团队正因商业许可问题转向全新的外部数据源，导致现有数据层基本失效。
-任务：我的职责是重新设计数据库模式，构建新的数据导入流程，并开发后端API——同时确保迁移过程中不会破坏现有数据或破坏下游功能。
-动作场面：我分三部分来处理。
-首先，我重构了数据库模式。最初的设计比较单调：静态的球员身份信息如姓名和生日与赛季相关的数据（如位置和球衣号码）混合在一起。这让跨季查询变得很痛苦，因为有很多重复。我将静态属性和赛季相关统计分开到不同的表格中，这样获取球员的职业生涯历史就变成了一个干净利落的连接，而不是繁琐的筛选。
-其次，我构建了一个玩家身份匹配流程，采用三层备份：先精确源ID查询，然后基于URL匹配，最后为未映射玩家进行规范化姓名匹配。如果三个都失败了，我宁愿创建一个新玩家记录，也不愿冒险合并两个不同的人——因为重复的可以以后清理，但错误的合并会永久损坏数据。我还设计了一个映射层，将所有外部ID转换为内部UUID，这样如果数据源再次变化，只需更新该映射层。前端和后端保持不动。
-第三，我修复了摄取流程中的幂等性问题。最初的独特约束基于球员、球队、赛季、类别和来源。但我注意到有两个例外：如果球员赛季中途转会，球队ID会变，导致upsert插入重复的ID，而不是更新;而流水线同时存储每场比赛统计和赛季层面的汇总数据，旧约束无法区分，因此它们会互相覆盖。我在唯一约束中用游戏ID替换了团队ID，这解决了这两个问题，并使流水线完全冪起。
-结果：迁移过程顺利完成，没有数据丢失或停机。之前需要复杂过滤的跨季查询变成了简单的连接，流程在重执行时运行得很干净，没有重复。映射层架构也意味着团队能够应对其他源交换机的未来保障。
-学习：这让我明白，数据建模中最难的部分不是走幸福之路——而是预见那些无声破坏数据的边缘情况。我还学到了可替换性设计的价值：通过将外部依赖隔离在映射层后面，系统对无法预测的变化具有弹性。
+
+情况/任务：在数据源转换期间加入后端团队，负责重构数据库模式
+为什么要复杂：新加入，没有文档，现有模式由别人设计，必须保留前端功能
+
+动作场面：
+与导师（原始设计师）会面，→他引导关注统计表
+调查→发现身份信息与季节性数据混合，导致冗余和数据完整性风险
+和前端沟通→了解他们依赖的响应形态和领域
+设计修复方案→将静态身份数据分离到自己的表中，JOIN by player_id
+更新后端API→前端依然得到同样的响应，完全没有中断
+向技术负责人提出→批准并实施
+
+我学到的：
+优先排序：从最关键的业务部分开始，而不是试图一次性解决所有问题
+深入探讨：在急于采取解决方案之前，先调查根本原因
+主动沟通：在进行上游修改前，先收集下游需求——不要孤立地重新设计
 
 ### 7. **Help Peers**
 从长远来看 你有帮助他们么，在解决这个事情以后 他们有什么提升么

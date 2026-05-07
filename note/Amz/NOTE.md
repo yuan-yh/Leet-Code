@@ -1,3 +1,56 @@
+
+deep dive: fix idem by 2 steps
+Follow-ups: how to determine test query, explain why game_id (per-game and season-aggregates), clarify first fix per-game duplicates but not season-aggregates, so need 2nd fix
+
+unexpected change: propose batch edit but rejected -> dive & balance -> me: limit + pattern, mentor suggest: log -> fix and apply
+Follow-up: 
+how to determine the limit (based on screen-size)
+what will change if you do it again with gen-AI
+
+harsh feedback: not fully reuse -> standup & active peer review -> later see the collaborate chance with another intern, work together and boost efficiency
+
+cloudscape, React, heavily by AI
+
+---
+
+Payment:
+May 03
+Lyft to PWM
+Food: Airport: MacDonald
+Lyft to hotel
+Food: Din Tai Fung Order
+May 04
+Lyft to Amazon building
+Food: Din Tai Fung Order
+Food: Din Tai Fung Order
+May 05
+Food: Meiyue Cake
+Food: Chiwei Tang
+May 06
+Food: Meiyue
+Food: Russian Bread
+Lyft: hotel to airport
+Food: airport poke bowl
+Lyft: airport to home
+---
+
+Yutika Yong
+Date: MAY 04, 2026
+Interview Address: 2250 7th Ave Seattle WA, 98121
+Link: https://livecode.amazon.jobs/joinsession/37d53265-a2fe-4bda-801f-2eeed6810862
+
+2:45 PM - 3:45 PM; Xuefei Zhou
+- 数据建模、分区策略和查询灵活性
+3:45 PM - 4:45 PM; Sherif Alhawary (Senior)
+
+Hotel: Hyatt Regency Seattle
+Time: Sun, May 03, 2026; 04:00 PM -> Tue, May 05, 2026; 11:00 AM
+Address: 808 Howell StSeattle, WA, US
+Hotel Confirmation Code: 151162RA071543
+Phone: +1 206 9731234
+
+---
+
 Yashvi Yu
 Date: Tuesday, May 5
 Location: SEA33 - Blackfoot
@@ -13,6 +66,9 @@ Time: Mon, May 04, 2026; 04:00 PM -> Wed, May 06, 2026; 12:00 PM
 Address: 2200 Fifth Avenue, Seattle, WA, US
 Phone: 1-206-4419785
 Hotel Confirmation Code: 40433SG181507
+
+---
+
 
 -----
 
@@ -35,27 +91,3 @@ To Future flight credit
 Please use confirmation number I11DLV to return to this canceled reservation in My Trips and make changes for a future trip. Change fees may apply for international flights originating outside of the United States. Begin travel by: Apr 30, 2027.
 
 ----
-Payment:
-May 03
-Lyft to PWM
-Food: Airport: MacDonald
-Lyft to hotel
-Food: Din Tai Fung Order
-May 04
-Lyft to Amazon building
-
----
-Yutika Yong
-Date: MAY 04, 2026
-Interview Address: 2250 7th Ave Seattle WA, 98121
-Link: https://livecode.amazon.jobs/joinsession/37d53265-a2fe-4bda-801f-2eeed6810862
-
-2:45 PM - 3:45 PM; Xuefei Zhou
-- 数据建模、分区策略和查询灵活性
-3:45 PM - 4:45 PM; Sherif Alhawary (Senior)
-
-Hotel: Hyatt Regency Seattle
-Time: Sun, May 03, 2026; 04:00 PM -> Tue, May 05, 2026; 11:00 AM
-Address: 808 Howell StSeattle, WA, US
-Hotel Confirmation Code: 151162RA071543
-Phone: +1 206 9731234
